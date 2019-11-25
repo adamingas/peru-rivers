@@ -45,7 +45,7 @@ from sklearn.exceptions import NotFittedError
 
 
 class Experiment():
-    def __init__(self, meta_data:pd.DataFrame, estimator,grid:dict = None, draws=100,  train_test_column="group",
+    def __init__(self, meta_data:pd.DataFrame, estimator,grid:dict = None,estimator_name=None,  train_test_column="group",
                  target_column="target", names = (None, None), train_test_split_method=StratifiedKFold(n_splits=7),
                  css_normalisation=CSSNormaliser(identity=True), validation_method_group: tuple = (None, None),
                  scaler=FunctionTransformer(validate=False), resampler=FunctionSampler(),
@@ -96,7 +96,12 @@ class Experiment():
         # or want the default
         if self.grid is None or type(self.grid) == str and self.grid.lower() == "default":
             self.default_grid()
+        if estimator_name is  None:
+            self.estimator_name = type(self.estimator).__name__
+        else:
+            self.estimator_name = estimator_name
         self.kwargs = kwargs
+
 
     def default_grid(self):
         estimator_name = mth.classifier_to_string.get(type(self.estimator))
@@ -125,15 +130,15 @@ class Experiment():
         yindex = target.index
 
         # Creating variables to store results of experiment
-        # best_parameters is a list of the best hyperparameters for each test set
+        # self.best_parameters is a list of the best hyperparameters for each test set
         # y_pred are the predictions of the classifier
         # coefficients is a list of coefficients for features if it is supported by the estimator. If not it is a list
         # of None
         # false_samples is a list of the names of falsely classified samples, for easy retrieval (although the same
         # information is contained in the y_pred dataframe)
-        best_parameters = []
+        self.best_parameters = []
         self.y_pred = pd.DataFrame(index=yindex, data={"predictions": np.zeros(yindex.shape)})
-        coefficients = []
+        self.coefficients = []
         false_samples = []
 
         # TODO: Calculate confusion from y_pred and target
@@ -153,14 +158,16 @@ class Experiment():
             set_parameters, set_coef = self.fit(x_train=  xtrain,meta_train= ytrain,validation_group=validation_group.iloc[train_index])
             # Predict class of test set
             set_predictions = self.predict(xtest)
+            print(set_predictions)
+            print(ytest)
             # Update dataframe of predictions
             self.y_pred.iloc[test_index, 0] = set_predictions
 
             conf_matrix = metrics.confusion_matrix(ytest, set_predictions)
 
-            best_parameters.append(set_parameters)
+            self.best_parameters.append(set_parameters)
             # scoring_results.append(metrics.accuracy_score(ytest, predicted))
-            coefficients.append(set_coef)
+            self.coefficients.append(set_coef)
             if conf_matrix.shape == (1, 1):
                 if all(ytest == 0) or all(ytest == "Black"):
                     conf_matrix = np.array([[conf_matrix.item(), 0], [0, 0]])
@@ -172,11 +179,11 @@ class Experiment():
             # Checking which samples where wrongly predicted
             false_samples += yindex[test_index[ytest != set_predictions]].tolist()
         # TODO: Compare confusion at the end with confusion
-        self.confusion_at_the_end = metrics.confusion_matrix(target,self.y_pred)
+        self.confusion = metrics.confusion_matrix(target,self.y_pred)
         end = timer()
-        time = end -start
-        dictr = {"y_pred": self.y_pred, "best_parameters": best_parameters, "coefficients": coefficients, "time": time,
-                 "false_samples": false_samples,"confusion":confusion,"confusion_at_the_end":self.confusion_at_the_end}
+        self.time = end -start
+        dictr = {"y_pred": self.y_pred, "best_parameters": self.best_parameters, "coefficients": self.coefficients, "time": self.time,
+                 "false_samples": false_samples,"confusion":confusion,"confusion_at_the_end":self.confusion}
         return dictr
 
     def fit(self, x_train: pd.DataFrame, meta_train:pd.DataFrame,validation_group = None):

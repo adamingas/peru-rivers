@@ -102,7 +102,7 @@ def select_estimator(estimator_dict):
         # method arguments
         intersection = {i: estimator_dict[i] for i in estimator_dict if i in param_dict}
         return {"estimator": estimator.set_params(**intersection), "grid": grid, "cv_suffix": cv_suffix,
-                **estimator_dict}
+                "estimator_name":estimator_name,**estimator_dict}
 
     elif type(estimator_dict) is str:
         estimator_name = estimator_dict
@@ -112,7 +112,7 @@ def select_estimator(estimator_dict):
             grid = default_grids[estimator_name + "_cv"]
             # Getting all legal parameters
 
-            return {"estimator": estimator, "grid": grid, "cv_suffix": "_cv"}
+            return {"estimator": estimator, "grid": grid, "cv_suffix": "_cv","estimator_name":estimator_name}
         except (AttributeError, KeyError) as e:
             print("{} is not a proper estimator. Choose from {}".format(estimator_name, model_choices.keys()))
             raise e

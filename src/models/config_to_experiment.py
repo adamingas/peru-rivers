@@ -174,17 +174,21 @@ def convert_string_dictionary(list_of_hypothesis:list):
 
 
 list_of_experiments = []
+experiment_results = {}
 for settings in convert_string_dictionary(experiment_dictionary):
     data_dictionary = settings.pop("data_tuples")
     try: X = data_dictionary.pop("X")
     except KeyError: pass
     exp_instance = Experiment(**{**data_dictionary,**settings})
-
+    list_of_experiments.append(exp_instance)
     try:
         print(exp_instance)
 
-        list_of_experiments.append(exp_instance.run(X,data_dictionary["meta_data"]))
-        exp_instance.predict(X)
+        exp_result = exp_instance.run(X,data_dictionary["meta_data"])
+        list_of_experiments.append(exp_instance)
+
+        for j in exp_result.keys():
+            experiment_results.setdefault(j,[]).append(exp_result[j])
     except ValueError as vale:
         # This error arises when the GroupKFold method fails to split the data because the number of distinct groups in
         # validation variable is less than the number of splits
@@ -192,7 +196,7 @@ for settings in convert_string_dictionary(experiment_dictionary):
         print(exp_instance.validation_method," can't split ", exp_instance.validation_group, " because the number of "
                 "splits is more than the number of factors in the grouping variable")
         continue
-    print(list_of_experiments)
+
 
 
 #print(exp_instance)

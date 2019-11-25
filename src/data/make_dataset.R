@@ -15,6 +15,7 @@
 #               -taxadf just the taxonomy 
 #               -wwfdf metadata
 # The output folder is /data/processed
+library(stringi)
 
 # Go to the directory of the data
 setwd("data/raw")
@@ -45,13 +46,20 @@ fulldf =as.data.frame(x = fulltable,row.names =  fulldata[1,-seq(1,8)],stringsAs
 fulldf[,] <- sapply(fulldf[,],as.numeric) 
 
 # Preparing metadata
-wwf =read.table(file = "WWF_Samples.txt",header =TRUE,sep = "\t",stringsAsFactors = FALSE)
+wwf =read.table(file="WWF_Samples.txt",header =TRUE,sep = "\t",stringsAsFactors = FALSE)
+all(stri_enc_isutf8(wwf$Details))
+wwf$Details <-((stri_encode(wwf$Details,"","UTF-8")))
+wwf$River <-((stri_encode(wwf$River,"","UTF-8")))
 wwfdf <- as.data.frame(x=wwf,row.names=wwf$ID)
+dropcols <- c("ID","Details")
+wwfdf <- wwfdf[,!names(wwfdf) %in% dropcols]
 wwfdf[,"Area_group"] <- sapply(wwfdf[,"Area_group"],as.factor)
 wwfdf[,"Area_group_name"] <- sapply(wwfdf[,"Area_group_name"],as.factor)
 wwfdf[,"Water"] <- sapply(wwfdf[,"Water"],as.factor)
 
-wwfdf$ID_nosamples <- gsub(pattern = "[a-zA-Z-]","",wwfdf$ID)
+wwfdf$ID_nosamples <- gsub(pattern = "[a-zA-Z-]","",row.names(wwfdf))
+
+
 wwfdf[,"ID_nosamples"]<- sapply(wwfdf[,"ID_nosamples"],as.factor)
 
 
@@ -76,7 +84,7 @@ write.csv(x = riverdf100s,file = "riverdf100s")
 
 write.csv(x = fulldf,file = "fulldf")
 write.csv(x = fulldf100s,file = "fulldf100s")
-
-write.csv(x = wwfdf,file = "wwfdf",fileEncoding = "UTF-8")
+Sys.getlocale()
+write.table(x = wwfdf,file = "wwfdf",fileEncoding = "UTF-8",sep = ",")
 
 write.csv(taxadf,"taxadf")
