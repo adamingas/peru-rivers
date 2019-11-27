@@ -2,9 +2,10 @@ from methods import string_to_key, select_estimator, read_datasets, cv_choices
 from  sklearn import model_selection, preprocessing
 import imblearn
 from cssnormaliser import CSSNormaliser
-from config import experiment_dictionary
+from config import trips_dictionary
 from sklearn.model_selection import StratifiedKFold
-
+from sklearn import metrics
+import pandas as pd
 from experiment import Experiment
 import methods as mth
 from itertools import product
@@ -172,32 +173,37 @@ def convert_string_dictionary(list_of_hypothesis:list):
 
     return list_of_experiment_configurations
 
-
-list_of_experiments = []
-experiment_results = {}
-for settings in convert_string_dictionary(experiment_dictionary):
-    data_dictionary = settings.pop("data_tuples")
-    try: X = data_dictionary.pop("X")
-    except KeyError: pass
-    exp_instance = Experiment(**{**data_dictionary,**settings})
-    list_of_experiments.append(exp_instance)
-    try:
-        print(exp_instance)
-
-        exp_result = exp_instance.run(X,data_dictionary["meta_data"])
+def create_and_run_exp(list_of_hypothesis:list):
+    list_of_experiments = []
+    experiment_results = {}
+    for settings in convert_string_dictionary(list_of_hypothesis):
+        data_dictionary = settings.pop("data_tuples")
+        try: X = data_dictionary.pop("X")
+        except KeyError: pass
+        exp_instance = Experiment(**{**data_dictionary,**settings})
         list_of_experiments.append(exp_instance)
+        try:
+            print(exp_instance)
 
-        for j in exp_result.keys():
-            experiment_results.setdefault(j,[]).append(exp_result[j])
-    except ValueError as vale:
-        # This error arises when the GroupKFold method fails to split the data because the number of distinct groups in
-        # validation variable is less than the number of splits
-        print(vale)
-        print(exp_instance.validation_method," can't split ", exp_instance.validation_group, " because the number of "
-                "splits is more than the number of factors in the grouping variable")
-        continue
+            exp_result = exp_instance.run(X,data_dictionary["meta_data"])
+            list_of_experiments.append(exp_instance)
+            experiment_results.setdefault("classifier",[]).append(exp_instance.estimator_name)
+            experiment_results.setdefault("accuracy", []).append(exp_instance.accuracy)
+            for j in exp_result.keys():
+                experiment_results.setdefault(j,[]).append(exp_result[j])
+        except ValueError as vale:
+            # This error arises when the GroupKFold method fails to split the data because the number of distinct groups in
+            # validation variable is less than the number of splits
+            print(vale)
+            print(exp_instance.validation_method," can't split ", exp_instance.validation_group, " because the number of "
+                    "splits is more than the number of factors in the grouping variable")
+            continue
+    return experiment_results,list_of_experiments
 
-
+experiment_results,__ = create_and_run_exp(trips_dictionary)
+resultsdf = pd.DataFrame(experiment_results, index=experiment_results.pop("classifier"))
+resultsdf.to_pickle("results")
+print(convert_string_dictionary(trips_dictionary))
 
 #print(exp_instance)
 # Can't check for duplicate experiments or for bad combinations so we just have to convert to experiment objects

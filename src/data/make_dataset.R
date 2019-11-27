@@ -36,7 +36,7 @@ riverdf <- otudf[,index_of_riverotus]
 # Getting taxonomy from otudata
 taxadf<-data.frame(otudata[-seq(1,3),seq(4,8)],row.names = otudata[-seq(1,3),2])
 colnames(taxadf)<- otudata[3,seq(4,8)]
-
+taxadf <- taxadf[index_of_riverotus,]
 # Creating the fulldataset
 fulldata = read.table(header = FALSE,file = "full_otu.csv",sep = ",",stringsAsFactors = F)
 
@@ -47,7 +47,7 @@ fulldf[,] <- sapply(fulldf[,],as.numeric)
 
 # Preparing metadata
 wwf =read.table(file="WWF_Samples.txt",header =TRUE,sep = "\t",stringsAsFactors = FALSE)
-all(stri_enc_isutf8(wwf$Details))
+#all(stri_enc_isutf8(wwf$Details))
 wwf$Details <-((stri_encode(wwf$Details,"","UTF-8")))
 wwf$River <-((stri_encode(wwf$River,"","UTF-8")))
 wwfdf <- as.data.frame(x=wwf,row.names=wwf$ID)
@@ -84,7 +84,6 @@ write.csv(x = riverdf100s,file = "riverdf100s")
 
 write.csv(x = fulldf,file = "fulldf")
 write.csv(x = fulldf100s,file = "fulldf100s")
-Sys.getlocale()
 write.table(x = wwfdf,file = "wwfdf",fileEncoding = "UTF-8",sep = ",")
 
 write.csv(taxadf,"taxadf")

@@ -54,11 +54,12 @@ class Experiment():
         Each instance of this class is a classification experiment
         which stores all the configurations and the results.
         This object can be used to run a hypothesis by supplying it with X,y
-        TODO: Fit such that model is usable for prediction, check if model was fitted before prediction
         :param meta_data:
             The meta data set that contains the target, train_test_group and validation_group columns
         :param train_test_split_method: StratifiedKFold or GroupKFold
-        :param models: (estimator object,grid of hyperparameters)
+        :param estimator: estimator object,
+        :param grid: grid of hyperparameters
+        :param estimator_name: name of estimator
         :param css_normalisation: CSSNormalisation object
         :param validation_method_group: (StratifiedKFold or GroupKFold,column_name_for_grouping)
         :param scaler: sklearn.preprocessing method
@@ -71,6 +72,7 @@ class Experiment():
         """
         self.names= names
         self.target_column = mth.checking_columns(dataframe=meta_data, column=target_column, x = target_column)
+        self.y_true = meta_data.loc[:, self.target_column]
         try:
             # Get group column
             self.train_test_split_column = mth.checking_columns(meta_data, train_test_column, x=train_test_column)
@@ -158,8 +160,7 @@ class Experiment():
             set_parameters, set_coef = self.fit(x_train=  xtrain,meta_train= ytrain,validation_group=validation_group.iloc[train_index])
             # Predict class of test set
             set_predictions = self.predict(xtest)
-            print(set_predictions)
-            print(ytest)
+
             # Update dataframe of predictions
             self.y_pred.iloc[test_index, 0] = set_predictions
 
@@ -184,6 +185,7 @@ class Experiment():
         self.time = end -start
         dictr = {"y_pred": self.y_pred, "best_parameters": self.best_parameters, "coefficients": self.coefficients, "time": self.time,
                  "false_samples": false_samples,"confusion":confusion,"confusion_at_the_end":self.confusion}
+        self.accuracy = metrics.accuracy_score(self.y_true,self.y_pred)
         return dictr
 
     def fit(self, x_train: pd.DataFrame, meta_train:pd.DataFrame,validation_group = None):

@@ -86,6 +86,31 @@ space = {
             #
             # "resampler__kind": hp.choice("resampler__kind", ["borderline-1", "borderline-2"])
         }
+trips_dictionary = [{ # [M] Mandatory, [O] Optional
+    "Data": [{"features":"riverdf", "target":"wwfdf","target_col": "Trip","train_test_group":"Trip"}], # [M] What set of features and target data sets to use
+    # [O] The target_col is the column where the labels can be found, default "target"
+    # [O] Train_test_group is the column used to split the set to train and
+    # test, default "group" if it exists, if not then "target" column
+    "train_test_split_method": [{"name":"StratifiedKFold","n_splits":6}], # [O] How to generate train-test splits, default "StratifiedKFold
+    "models": [{# Inside here is information used for the training step of the procedure
+        "estimators": [{"name":"RandomForest","cv":"grid"}],# [M] Models to use for classification. Custom models
+        # can also be passed and custom grid spaces.
+        "resampler": [None],# [O] If not given, None is used
+        "css": [ "CSSLOG"], # [O] If not given, None is used
+        # [O] The hyperparameter search  If not given, Grid is used possible options are {Grid, Bayes, Random}
+        "scaler": [None], # [O] Scaler to use on data, default None
+        "validation":[{"name":"StratifiedKFold","n_splits":5}]
+        # [O] How to split train set to validation folds and which column of the meta data to use. Default value is
+        # the train_test splitting method and the train_test column.
+    },
+        {
+            "estimators":[ {"name":"LogisticRegression","penalty":"l2","fit_intercept":True},
+                       {"name":"SVM","kernel":"poly","degree":1}],
+            "css": [ "CSSLOG"],
+            "scaler": [{"name":"StandardScaler","with_mean":False}],
+            "validation":[{"name":"StratifiedKFold","n_splits":5}]
+        }]
+}]
 
 experiment_dictionary = [{ # [M] Mandatory, [O] Optional
     "Data": [{"features":"riverdf", "target":"wwfdf","target_col": "Trip","train_test_group":"Trip"}], # [M] What set of features and target data sets to use
