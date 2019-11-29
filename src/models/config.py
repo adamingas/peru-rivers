@@ -30,7 +30,7 @@ default_grids = {
     "LogisticRegression_cv":{
                 'C': [0.0001, 0.001, 0.01, 0.1, 1, 20, 50] + list(np.arange(2, 20, 1))
 
-                ,'fit_intercept': (True)
+                ,'fit_intercept': [True]
             },
     "SVM_cv":{"kernel":["poly"],"gamma":["auto","scale",0.1,1,10],"class_weight":["balanced",None],
                     'C':[0.1, 1, 0.5], "degree":[1,2],"coef0" :[0,0.1,1,0.001]},
@@ -86,32 +86,37 @@ space = {
             #
             # "resampler__kind": hp.choice("resampler__kind", ["borderline-1", "borderline-2"])
         }
-trips_dictionary = [{ # [M] Mandatory, [O] Optional
-    "Data": [{"features":"riverdf", "target":"wwfdf","target_col": "Trip","train_test_group":"Trip"}], # [M] What set of features and target data sets to use
+
+"""
+A sample dictionary used to run the water as labels experiments. We are using the dissimilarity case"""
+water_dictionary = { # [M] Mandatory, [O] Optional
+    "Data": [{"features":"riverdf", "target":"wwfdf","target_col": "Water","train_test_group":"Area_group"}], # [M] What set of features and target data sets to use
     # [O] The target_col is the column where the labels can be found, default "target"
     # [O] Train_test_group is the column used to split the set to train and
     # test, default "group" if it exists, if not then "target" column
-    "train_test_split_method": [{"name":"StratifiedKFold","n_splits":6}], # [O] How to generate train-test splits, default "StratifiedKFold
-    "models": [{# Inside here is information used for the training step of the procedure
-        "estimators": [{"name":"RandomForest","cv":"grid"}],# [M] Models to use for classification. Custom models
-        # can also be passed and custom grid spaces.
-        "resampler": [None],# [O] If not given, None is used
-        "css": [ "CSSLOG"], # [O] If not given, None is used
-        # [O] The hyperparameter search  If not given, Grid is used possible options are {Grid, Bayes, Random}
-        "scaler": [None], # [O] Scaler to use on data, default None
-        "validation":[{"name":"StratifiedKFold","n_splits":5}]
-        # [O] How to split train set to validation folds and which column of the meta data to use. Default value is
-        # the train_test splitting method and the train_test column.
-    },
+    "train_test_split_method": [{"name":"GroupKFold","n_splits":7}], # [O] How to generate train-test splits, default "StratifiedKFold
+    "models": [
         {
-            "estimators":[ {"name":"LogisticRegression","penalty":"l2","fit_intercept":True},
-                       {"name":"SVM","kernel":"poly","degree":1}],
-            "css": [ "CSSLOG"],
-            "scaler": [{"name":"StandardScaler","with_mean":False}],
-            "validation":[{"name":"StratifiedKFold","n_splits":5}]
-        }]
-}]
+            "estimators":[ {"name":"MultinomialNB"},{"name": "RandomForest"}],
+            "css": [ "CSSLOG","CSS",None],
+            "scaler": [None],
+            "resampler":[None,{"name":"RandomOverSampler","random_state":11235}],
+            "validation":[{"name":"GroupKFold","group_col":"Area_group","n_splits":6}]
+        },
+        {
+            "estimators": [{"name":"SVM","kernel":"poly","degree":1}],
+            "css": ["CSSLOG", "CSS", None],
 
+            "scaler": [{"name":"StandardScaler","with_mean":False}],
+            "resampler":[None,{"name":"RandomOverSampler","random_state":11235}],
+            "validation":[{"name":"GroupKFold","group_col":"Area_group","n_splits":6}]
+        }
+    ]
+}
+"""
+The program will loop through all dictionaries in the hypothesis list and execute them
+"""
+hypothesis = [water_dictionary]
 experiment_dictionary = [{ # [M] Mandatory, [O] Optional
     "Data": [{"features":"riverdf", "target":"wwfdf","target_col": "Trip","train_test_group":"Trip"}], # [M] What set of features and target data sets to use
     # [O] The target_col is the column where the labels can be found, default "target"

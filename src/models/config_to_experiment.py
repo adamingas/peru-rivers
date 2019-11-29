@@ -2,14 +2,17 @@ from methods import string_to_key, select_estimator, read_datasets, cv_choices
 from  sklearn import model_selection, preprocessing
 import imblearn
 from cssnormaliser import CSSNormaliser
-from config import trips_dictionary
+from config import hypothesis
 from sklearn.model_selection import StratifiedKFold
 from sklearn import metrics
 import pandas as pd
 from experiment import Experiment
 import methods as mth
 from itertools import product
-
+import warnings
+warnings.filterwarnings("ignore", category=UserWarning)
+warnings.filterwarnings("ignore", category=DeprecationWarning)
+warnings.filterwarnings("ignore", category=FutureWarning)
 
 """
 A script that converts a configuration file (dictionary) into experiments
@@ -187,51 +190,28 @@ def create_and_run_exp(list_of_hypothesis:list):
 
             exp_result = exp_instance.run(X,data_dictionary["meta_data"])
             list_of_experiments.append(exp_instance)
-            experiment_results.setdefault("classifier",[]).append(exp_instance.estimator_name)
-            experiment_results.setdefault("accuracy", []).append(exp_instance.accuracy)
+            # adding to results the parameters of the experiment to make it easier to store them
+            exp_result = {**exp_instance.return_dictionary(),**exp_result,"accuracy":exp_instance.accuracy}
+            # experiment_results.setdefault("classifier",[]).append(exp_instance.estimator_name)
+            # experiment_results.setdefault("CSS", []).append(str(exp_instance.css))
+            # experiment_results.setdefault("scaler", []).append(str(exp_instance.scaler))
+            # experiment_results.setdefault("resampler", []).append(str(exp_instance.resampler))
+            # experiment_results.setdefault("data_names", []).append(exp_instance.names)
+            # experiment_results.setdefault("target_column", []).append(str(exp_instance.target_column))
+            # experiment_results.setdefault("accuracy", []).append(exp_instance.accuracy)
             for j in exp_result.keys():
                 experiment_results.setdefault(j,[]).append(exp_result[j])
         except ValueError as vale:
             # This error arises when the GroupKFold method fails to split the data because the number of distinct groups in
             # validation variable is less than the number of splits
             print(vale)
-            print(exp_instance.validation_method," can't split ", exp_instance.validation_group, " because the number of "
-                    "splits is more than the number of factors in the grouping variable")
+            # print(exp_instance.validation_method," can't split ", exp_instance.validation_group, " because the number of "
+            #         "splits is more than the number of factors in the grouping variable")
             continue
     return experiment_results,list_of_experiments
 
-experiment_results,__ = create_and_run_exp(trips_dictionary)
-resultsdf = pd.DataFrame(experiment_results, index=experiment_results.pop("classifier"))
-resultsdf.to_pickle("results")
-print(convert_string_dictionary(trips_dictionary))
+experiment_results,__ = create_and_run_exp(hypothesis)
+resultsdf = pd.DataFrame(experiment_results)
+resultsdf.to_pickle("../../results/supervised/results")
 
-#print(exp_instance)
-# Can't check for duplicate experiments or for bad combinations so we just have to convert to experiment objects
 # TODO: Check after objection creation if we can check for duplicates using fancy __eq__ and __repl__
-# exp_keys = literal_dict.keys()
-# list_of_products =list(my_product(list_of_settings[0],just_values=False))
-# set_of_products = set()
-# list_of_unique_products = []
-# print(list_of_products)
-# print("====================================================")
-# for exp in list_of_products:
-#     if type(exp["models"][0]) == type(RandomForestClassifier()):
-#         print("in!")
-#         exp["scaler"] =preprocessing.FunctionTransformer()
-#     if not list_of_unique_products.count(exp):
-#         list_of_unique_products.append(exp)
-#
-# # list_of_unique_exp = [dict(zip(exp_keys,values)) for values in set_of_products]
-# print(list_of_products)
-# print(len(list_of_products))
-# print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
-# print(list_of_unique_products)
-# print(len(list_of_unique_products))
-#print(data_tuples)
-
-# mth.CV_models(grid = rfr_grid,estimator=RandomForestClassifier(),parameter_search="grid",validation_Train_test_split_method=GroupKFold,
-#           number_of_kfolds=7).fit(data_tuples[0][0],data_tuples[0][1].loc[:,"Water"],data_tuples[0][1].loc[:,"Area_group"])
-
-
-#Train_test_split_method  = [getattr(model_selection,i) for i in experiment_dictionary["Train_test_split_method"]]
-

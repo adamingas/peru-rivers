@@ -20,10 +20,15 @@ from sklearn.naive_bayes import MultinomialNB,ComplementNB,GaussianNB,BernoulliN
 from hyperopt import Trials,STATUS_OK,fmin,tpe,hp
 from hyperopt import base
 base.have_bson = False
-
+import warnings
+warnings.filterwarnings("ignore", category=UserWarning)
+warnings.filterwarnings("ignore", category=DeprecationWarning)
+warnings.filterwarnings("ignore", category=FutureWarning)
 # from sksom import SKSOM
 # import xgboost as xgb
-model_choices = {"RandomForest": RandomForestClassifier, "LogisticRegression": LogisticRegression, "SVM": SVC}
+model_choices = {"RandomForest": RandomForestClassifier, "LogisticRegression": LogisticRegression, "SVM": SVC,
+                 "BernoulliNB":BernoulliNB,"MultinomialNB":MultinomialNB,"ComplementNB":ComplementNB,
+                 "KNN":KNeighborsClassifier}
 
 classifier_to_string = {
     type(RandomForestClassifier()):"RandomForest",
@@ -645,7 +650,7 @@ class CV_models():
         try:
             intersection = set(dir(self.search_results.best_estimator_)) & {"feature_importances_", "coef_"}
             coefficients = getattr(self.search_results.best_estimator_, *intersection)
-        except TypeError:
+        except (TypeError,AttributeError):
             coefficients = None
 
         return best_parameters, self.search_results, coefficients

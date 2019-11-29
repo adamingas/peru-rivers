@@ -8,6 +8,10 @@ from sklearn.model_selection import StratifiedKFold
 from sklearn.preprocessing import FunctionTransformer
 from imblearn import FunctionSampler
 from sklearn.exceptions import NotFittedError
+import warnings
+warnings.filterwarnings("ignore", category=UserWarning)
+warnings.filterwarnings("ignore", category=DeprecationWarning)
+warnings.filterwarnings("ignore", category=FutureWarning)
 # import scipy.stats as st
 #
 # from sklearn.svm import SVC
@@ -218,6 +222,7 @@ class Experiment():
             # area number the new samples would take/
             set_for_kfold = ytrain
         # Scaling the train set
+        xtrain = self.css.fit_transform(xtrain)
         xtrain = self.scaler.fit_transform(xtrain)
 
         # Splitting the train set into validation folds that will be used in training
@@ -234,6 +239,7 @@ class Experiment():
 
         # The test sample has to be transformed to the same scale as the train set
         try:
+            xtest = self.css.transform(xtest)
             xtest = self.scaler.transform(xtest)
             return self.model.predict(xtest)
         except AttributeError as e:
@@ -242,24 +248,20 @@ class Experiment():
                   "and then Experiment.predict(test_features)")
             raise e
 
+    def return_dictionary(self):
+        """
+        returns some parameters of the instance in a dictionary
+        :return:
+        """
+        parameters = self.__dict__
+        parameters_to_print = ["estimator_name", "css", "scaler", "resampler", "names", "target_column",
+                               "cv", "train_test_split_method", "train_test_split_column", "validation_method",
+                               "validation_group", "estimator"]
+        self.parameters_dictionary = {i: parameters[i] for i in parameters_to_print}
+        return {i: parameters[i] for i in parameters_to_print}
+
     def __str__(self):
-        return(str(self.__dict__))
+        return(str(self.return_dictionary()))
 
 
-if __name__ == "__main__":
-    path_to_data = "../../data/processed/"
-    riverdf = pd.read_csv(path_to_data + "riverdf", index_col=0)
-    wwfdf = pd.read_csv(filepath_or_buffer=path_to_data + "wwfdf", encoding="ISO-8859-1", index_col="ID")
 
-    rfr_grid = {
-        'max_depth': (list(range(3, 7)) + [None]),
-        # 'n_estimators': [100, 300, 500, 1000],
-        # "min_samples_split": [2, 3, 4],
-        # "class_weight": ["balanced"],
-        "bootstrap": [False]
-    }
-    testExperiment = Experiment(model_name="RFR", css=CSSNormaliser(log=True), fold_generator=StratifiedKFold,
-                                x=riverdf, meta_data=wwfdf.Water, scaler=None, resampler=None,
-                                cv=mth.rfr_cv, grid=rfr_grid, penalty="l1")
-
-    testExperiment.run()
