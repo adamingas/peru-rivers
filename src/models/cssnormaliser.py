@@ -1,11 +1,19 @@
-from rpy2.rinterface_lib.embedded import RRuntimeError
+#from rpy2.rinterface_lib.embedded import RRuntimeError
 import numpy as np
 from sklearn.base import TransformerMixin
 from rpy2.robjects.packages import importr
 from pandas import DataFrame
 import rpy2.robjects.numpy2ri
+import rpy2.robjects as robjects
+import os
 rpy2.robjects.numpy2ri.activate()
-msq = importr("metagenomeSeq")
+dirname = os.path.dirname(__file__)
+filename = os.path.join(dirname, '../../R')
+libpaths =robjects.r[".libPaths"]
+paths = robjects.StrVector((*libpaths(),filename))
+libpaths(paths)
+msq = importr("metagenomeSeq",lib_loc = filename)
+
 # BiocManager = importr_tryhard("BiocManager","http://cran.us.r-project.org")
 # msq =importr_tryhard("metagenomeSeq","https://cran.ma.imperial.ac.uk/")
 
