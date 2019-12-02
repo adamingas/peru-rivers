@@ -17,7 +17,7 @@ def importr_tryhard(packname, contriburl = None):
     try:
         rpack = importr(packname)
     except:
-        utils.install_packages(packname,"./R")
+        utils.install_packages(packname,filename)
         rpack = importr(packname)
     return rpack
 #Check if we can bypass all these installations, either by using default R installation
@@ -27,6 +27,7 @@ abs_fil_path = os.path.join(script_dir, "package_installer.R")
 r = robjects.r
 #r.source(abs_fil_path)
 #r.pkgTest("BiocManager")
+importr_tryhard("stringi")
 BiocManager = importr_tryhard("BiocManager")
 try:
     msq = importr_tryhard("metagenomeSeq") 

@@ -15,10 +15,20 @@
 #               -taxadf just the taxonomy 
 #               -wwfdf metadata
 # The output folder is /data/processed
+
+# We do the following 
+initial.options <- commandArgs(trailingOnly = FALSE)
+file.arg.name <- "--file="
+script.name <- sub(file.arg.name, "", initial.options[grep(file.arg.name, initial.options)])
+script.dirname <- dirname(script.name)
+mainDir = file.path(script.dirname,"..","..")
+libloc = file.path(script.dirname,"..","..","R")
+.libPaths(c(.libPaths(),libloc))
 library(stringi)
 
 # Go to the directory of the data
-setwd("data/raw")
+datapath = file.path(script.dirname,"..","..","data","raw")
+setwd(datapath)
 otudata = read.table(file = "taxonomy_only_otu.csv",sep = ",",stringsAsFactors = FALSE)
 otutable = t(otudata[-c(1,2,3),-seq(1,9)])
 colnames(otutable) <- (t(otudata)[2,-c(1,2,3)])
@@ -76,9 +86,10 @@ riverdf100s = riverdf100[!index_of_riverotus_samples,]
 index_of_full_samples =(rowSums(fulldf) <10000)
 fulldf100s = fulldf100[!index_of_full_samples,]
 
-
+dir.create(file.path("..","processed"), showWarnings = TRUE,recursive = TRUE)
+setwd(file.path("..", "processed"))
+print(getwd())
 # Saving dataframes as csv
-setwd("../processed/")
 write.csv(x = riverdf,file = "riverdf")
 write.csv(x = riverdf100s,file = "riverdf100s")
 

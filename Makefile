@@ -33,6 +33,8 @@ requirements: test_environment
 	$(PYTHON_INTERPRETER) src/models/r_install.py
 ## Make Dataset
 data: 
+	@mkdir -p "data/raw"
+	@mkdir -p "data/processed"
 	$(RSCRIPT) src/data/make_dataset.R 
 	@echo "Data are saved in /data/processed"
 
