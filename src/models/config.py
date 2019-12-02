@@ -73,7 +73,7 @@ default_grids = {
 # adding grids for naive bayes classifiers
 default_grids.update(dict.fromkeys(["MultinomialNB_cv","MultinomialNB_rcv","BernoulliNB_cv","BernoulliNB_rcv",
                                     "ComplementNB_cv","ComplementNB_rcv"],{
-            "alpha":np.linspace(0,1,num=50),
+            "alpha":np.linspace(1e-10,1,num=50),
             "fit_prior":[True,False]}))
 space = {
             'RFR__max_depth': hp.choice('RFR__max_depth', list(range(3, 7)) + [None]),

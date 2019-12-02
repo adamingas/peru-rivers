@@ -16,7 +16,7 @@ import sklearn.preprocessing as prepro
 from sklearn.neighbors import KNeighborsClassifier
 import sklearn.metrics as metrics
 from sklearn.naive_bayes import MultinomialNB,ComplementNB,GaussianNB,BernoulliNB
-
+import os
 from hyperopt import Trials,STATUS_OK,fmin,tpe,hp
 from hyperopt import base
 base.have_bson = False
@@ -24,6 +24,10 @@ import warnings
 warnings.filterwarnings("ignore", category=UserWarning)
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 warnings.filterwarnings("ignore", category=FutureWarning)
+
+# Get current directory of file
+dirname = os.path.dirname(__file__)
+project_dir = os.path.join(dirname,"..","..")
 # from sksom import SKSOM
 # import xgboost as xgb
 model_choices = {"RandomForest": RandomForestClassifier, "LogisticRegression": LogisticRegression, "SVM": SVC,
@@ -168,7 +172,7 @@ def read_datasets(data_string):
             "Data has to be expressed in either a tuple (features,target) or dictionary {\"features\":\"your_features\"," +
             "\"target\":\"your_target\"")
     # opening data
-    data_directory = "../../data/processed/"
+    data_directory = os.path.join(project_dir,"data/processed/")
     try:
         X = pd.read_csv(data_directory + features_file, index_col=0)
         y = pd.read_csv(data_directory + target_file, index_col=0, encoding="ISO-8859-1")
