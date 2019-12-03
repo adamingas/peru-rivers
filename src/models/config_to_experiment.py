@@ -9,10 +9,14 @@ import pandas as pd
 from experiment import Experiment
 import methods as mth
 from itertools import product
+import os
 import warnings
 warnings.filterwarnings("ignore", category=UserWarning)
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 warnings.filterwarnings("ignore", category=FutureWarning)
+
+dirname = os.path.dirname(__file__)
+project_dir = os.path.join(dirname,"..","..")
 
 """
 A script that converts a configuration file (dictionary) into experiments
@@ -212,6 +216,7 @@ def create_and_run_exp(list_of_hypothesis:list):
 
 experiment_results,__ = create_and_run_exp(hypothesis)
 resultsdf = pd.DataFrame(experiment_results)
-resultsdf.to_pickle("../../results/supervised/results")
+os.makedirs(os.path.join(project_dir,"results/supervised"), exist_ok=True) 
+resultsdf.to_pickle(os.path.join(project_dir,"results/supervised/results.pickl"))
 
 # TODO: Check after objection creation if we can check for duplicates using fancy __eq__ and __repl__

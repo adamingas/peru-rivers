@@ -6,6 +6,7 @@ __pycache__/
 *.so
 
 # Distribution / packaging
+R/
 .Python
 env/
 build/
@@ -77,6 +78,9 @@ target/
 
 # exclude data from source control by default
 /data/
+
+# exclude results also
+results/
 
 # Mac OS-specific storage files
 .DS_Store
