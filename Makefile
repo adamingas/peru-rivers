@@ -38,6 +38,10 @@ data:
 	$(RSCRIPT) src/data/make_dataset.R 
 	@echo "Data are saved in /data/processed"
 
+## Replicate the findings of the paper
+replicate: data,requirements
+	$(PYTHON_INTERPRETER) src/models/config_to_experiment.py
+	@echo "Results are stored in results/supervised as a pickle file.\n Open with padas.read_pickle(results.pickl)"
 ## Delete all compiled Python files
 clean:
 	find . -type f -name "*.py[co]" -delete

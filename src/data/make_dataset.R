@@ -67,11 +67,23 @@ wwfdf[,"Area_group"] <- sapply(wwfdf[,"Area_group"],as.factor)
 wwfdf[,"Area_group_name"] <- sapply(wwfdf[,"Area_group_name"],as.factor)
 wwfdf[,"Water"] <- sapply(wwfdf[,"Water"],as.factor)
 
+# Creating sites of samples and converting them to factors
 wwfdf$ID_nosamples <- gsub(pattern = "[a-zA-Z-]","",row.names(wwfdf))
-
-
 wwfdf[,"ID_nosamples"]<- sapply(wwfdf[,"ID_nosamples"],as.factor)
 
+# Creating new labels for prediction
+# River size is 0 for black water,1 for Upper maranon, 2 for Lower & Mid Maranon, Ucayalli,
+# and 3 for Huallaga, Tapiche and Napo
+wwfdf[,"River_size"] <- rep(1,nrow(wwfdf))
+wwfdf[wwfdf[,"Area_group_name"] %in% c("Maranon_lower","Maranon_mid","Ucayali"),"River_size"]<- 2
+wwfdf[wwfdf[,"Area_group_name"] %in% c("Tapiche","Napo","Huallaga"),"River_size"]<- 3
+wwfdf[wwfdf[,"Water"] == "Black","River_size"] <- 0
+
+# Creating new labels based on easting location of samples
+# River location is 0 for Upper maranon, 1 for Mid maranon and Tapiche, and 2 for the rest
+wwfdf[,"River_loc"] <- rep(2,nrow(wwfdf))
+wwfdf[wwfdf[,"Area_group_name"] %in% c("Maranon_mid","Tapiche"),"River_loc"]<- 1
+wwfdf[wwfdf[,"Area_group_name"] %in% c("Maranon_upper"),"River_loc"]<- 0
 
 
 # Producing smaller datasets with only otus with total read counts >100
