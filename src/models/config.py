@@ -10,14 +10,7 @@ from sklearn.ensemble import RandomForestClassifier
 # Have to have the same number of samples. Name of samples must be on the 0th column
 # Target column has to be named "target" or the name should be given
 # Group column should be named "group" or be given. Otherwise "target" column is used with StratifiedKFold
-rfr_small ={
-            'max_depth': (list(range(3, 7)) + [None]),
-            # 'n_estimators': [100, 300, 500, 1000],
-            # "min_samples_split": [2, 3, 4],
-            # "class_weight": ["balanced"],
-            "bootstrap": [False]
-        }
-test_grid= {"KNN__n_neighbors":[1,2,3]}
+
 
 default_grids = {
     "RandomForest_cv" : {
@@ -100,7 +93,7 @@ water_dictionary = { # [M] Mandatory, [O] Optional
             "estimators":[ {"name":"MultinomialNB"},{"name": "RandomForest"}],
             "css": [ "CSSLOG","CSS",None],
             "scaler": [None],
-            "resampler":[None,{"name":"RandomOverSampler","random_state":11235}],
+            "resampler":[None],
             "validation":[{"name":"GroupKFold","group_col":"Area_group","n_splits":6}]
         },
         {
@@ -108,15 +101,66 @@ water_dictionary = { # [M] Mandatory, [O] Optional
             "css": ["CSSLOG", "CSS", None],
 
             "scaler": [{"name":"StandardScaler","with_mean":False}],
-            "resampler":[None,{"name":"RandomOverSampler","random_state":11235}],
+            "resampler":[None],
             "validation":[{"name":"GroupKFold","group_col":"Area_group","n_splits":6}]
+        }
+    ]
+}
+
+river_loc = { # [M] Mandatory, [O] Optional
+    "Data": [{"features":"riverdf", "target":"wwfdf","target_col": "River_loc"},
+    {"features":"fulldf", "target":"wwfdf","target_col": "River_loc"}], # [M] What set of features and target data sets to use
+    # [O] The target_col is the column where the labels can be found, default "target"
+    # [O] Train_test_group is the column used to split the set to train and
+    # test, default "group" if it exists, if not then "target" column
+    "train_test_split_method": [{"name":"StratifiedKFold","n_splits":7}], # [O] How to generate train-test splits, default "StratifiedKFold
+    "models": [
+        {
+            "estimators":[ {"name":"MultinomialNB"},{"name": "RandomForest","random_state":11235}],
+            "css": [ "CSSLOG","CSS",None],
+            "scaler": [None],
+            "resampler":[None,{"name":"RandomOverSampler","random_state":11235}],
+            "validation":[{"name":"StratifiedKFold","n_splits":6}]
+        },
+        {
+            "estimators": [{"name":"SVM","kernel":"poly","degree":1}],
+            "css": ["CSSLOG", "CSS", None],
+
+            "scaler": [{"name":"StandardScaler","with_mean":False}],
+            "resampler":[None,{"name":"RandomOverSampler","random_state":11235}],
+            "validation":[{"name":"StratifiedKFold","n_splits":6}]
+        }
+    ]
+}
+
+river_size = { # [M] Mandatory, [O] Optional
+    "Data": [{"features":"riverdf", "target":"wwfdf","target_col": "River_size"},
+    {"features":"fulldf", "target":"wwfdf","target_col": "River_size"}], # [M] What set of features and target data sets to use
+    # [O] The target_col is the column where the labels can be found, default "target"
+    # [O] Train_test_group is the column used to split the set to train and
+    # test, default "group" if it exists, if not then "target" column
+    "train_test_split_method": [{"name":"StratifiedKFold","n_splits":7}], # [O] How to generate train-test splits, default "StratifiedKFold
+    "models": [
+        {
+            "estimators":[ {"name":"MultinomialNB"},{"name": "RandomForest","random_state":11235}],
+            "css": [ "CSSLOG","CSS",None],
+            "scaler": [None],
+            "resampler":[None,{"name":"RandomOverSampler","random_state":11235}],
+            "validation":[{"name":"StratifiedKFold","n_splits":6}]
+        },
+        {
+            "estimators": [{"name":"SVM","kernel":"poly","degree":1}],
+            "css": ["CSSLOG", "CSS", None],
+            "scaler": [{"name":"StandardScaler","with_mean":False}],
+            "resampler":[None, {"name":"RandomOverSampler","random_state":11235}],
+            "validation":[{"name":"StratifiedKFold","n_splits":6}]
         }
     ]
 }
 """
 The program will loop through all dictionaries in the hypothesis list and execute them
 """
-hypothesis = [water_dictionary]
+hypothesis = [water_dictionary, river_size, river_loc]
 experiment_dictionary = [{ # [M] Mandatory, [O] Optional
     "Data": [{"features":"riverdf", "target":"wwfdf","target_col": "Trip","train_test_group":"Trip"}], # [M] What set of features and target data sets to use
     # [O] The target_col is the column where the labels can be found, default "target"
@@ -151,7 +195,7 @@ complicated_dictionary = [{ # [M] Mandatory, [O] Optional
     "train_test_split_method": ["GroupKFold"], # [O] How to generate train-test splits, default "StratifiedKFold
     "number_of_folds":[7], # [O] Number of train-test folds
     "models": [{# Inside here is information used for the training step of the procedure
-        "estimators": [{"name":"RandomForest","grid":rfr_small,"cv":"grid"}, {"name":"LogisticRegression","penalty":"l2","fit_intercept":True},
+        "estimators": [{"name":"RandomForest","cv":"grid"}, {"name":"LogisticRegression","penalty":"l2","fit_intercept":True},
                        {"name":"SVM","kernel":"poly","degree":1}],# [M] Models to use for classification. Custom models
         # can also be passed and custom grid spaces.
         "resampler": [{"name": "RandomOverSampler","katialo":34, "random_state": 11235}],# [O] If not given, None is used

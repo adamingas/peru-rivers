@@ -258,7 +258,7 @@ class Experiment():
                                "cv", "train_test_split_method", "train_test_split_column", "validation_method",
                                "validation_group", "estimator"]
         self.parameters_dictionary = {i: str(parameters[i]) for i in parameters_to_print}
-        return {i: parameters[i] for i in parameters_to_print}
+        return self.parameters_dictionary
 
     def __str__(self):
         return(str(self.return_dictionary()))
