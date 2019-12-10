@@ -37,11 +37,13 @@ data:
 	@mkdir -p "data/processed"
 	$(RSCRIPT) src/data/make_dataset.R 
 	@echo "Data are saved in /data/processed"
+	
 
 ## Replicate the findings of the paper
 replicate: data requirements src/models/config.py
 	$(PYTHON_INTERPRETER) src/models/config_to_experiment.py
-	@echo "Results are stored in results/supervised as a pickle file.\n Open with pandas.read_pickle(results.pickl)"
+	@cp src/opening_results.py results/supervised/
+	@echo "Results are stored in results/supervised as a pickle file.\n Open by running ipython -i opening_results.py inside the folder"
 ## Delete all compiled Python files
 clean:
 	find . -type f -name "*.py[co]" -delete
