@@ -8,7 +8,7 @@ from src.models import cssnormaliser
 import numpy as np
 import pandas as pd
 
-project_dir = os.path.join(sys.argv[0],"../../")
+project_dir =os.path.join(os.path.dirname(sys.argv[0]),"../../")
 sys.modules["cssnormaliser"] = cssnormaliser
 print("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
 print("This file sets up the environment such that the pickled result file can be ",
