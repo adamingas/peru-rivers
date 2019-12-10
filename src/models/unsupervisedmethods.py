@@ -17,7 +17,7 @@ from sklearn import metrics
 from sklearn.decomposition import KernelPCA
 from pyclustering.cluster import kmedians,kmedoids
 path = "../../data/processed/"
-figure_path = "../../reports/figures"
+figure_path = "../../reports/figures/"
 wwfdf = pd.read_csv(filepath_or_buffer=path+"wwfdf",encoding="ISO-8859-1",index_col = 0)
 riverdf = pd.read_csv(path+"riverdf",index_col=0)
 riverdfCss = CSSNormaliser(log=False).fit_transform(riverdf)
@@ -126,8 +126,14 @@ resultdf = pd.read_csv("../../results/unsupervised/unsupervised.csv",header = 0,
 # resultdf["HDBSCAN4rivcsslog"] = hdbscan.HDBSCAN(min_cluster_size=4,metric="euclidean").fit_predict(riverdfCssLog)
 # cluster_on_map(resultdf["KMeans7rivcsslog"],title="KMeans 7 river set")
 
-resultdf["HDBSCAN4fullcsslogDetails"] = "hdbscan.HDBSCAN(min_cluster_size=4,metric=\"euclidean\").fit_predict(fulldfCssLog)"
-resultdf["HDBSCAN4fullcsslog"] = hdbscan.HDBSCAN(min_cluster_size=4,metric="euclidean").fit_predict(fulldfCssLog)
-
+# resultdf["HDBSCAN4fullcsslogDetails"] = "hdbscan.HDBSCAN(min_cluster_size=4,metric=\"euclidean\").fit_predict(fulldfCssLog)"
+# resultdf["HDBSCAN4fullcsslog"] = hdbscan.HDBSCAN(min_cluster_size=4,metric="euclidean").fit_predict(fulldfCssLog)
+#
+# resultdf["KMeans7fullcsslogDetails"] = "KMeans(random_state=11235,n_jobs = -1,n_clusters=7).fit((fulldfCssLog))"
+# resultdf["KMeans7fullcsslog"] =  cluster.KMeans(random_state=11235,n_jobs = -1,n_clusters=7).fit((fulldfCssLog)).labels_
+#
+# resultdf["KMedians7rivcsslogDetails"] = "KMedians(partitions = 7,dataframe =riverdfCssLog)"
+# resultdf["KMedians7rivcsslog"] = KMedians(partitions = 7,dataframe =riverdfCssLog)
+cluster_on_map(resultdf["KMedians7rivcsslog"],title="K-Medins 7 river set css log",fname="kmedians_7_rivcsslog.png")
 # save result as a csv in peru-rivers/results/unsupervised/unsupervised.csv
-resultdf.to_csv("../../results/unsupervised/unsupervised.csv")
+# resultdf.to_csv("../../results/unsupervised/unsupervised.csv")
