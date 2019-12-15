@@ -7,6 +7,9 @@ import os
 from src.models import cssnormaliser
 import numpy as np
 import pandas as pd
+from src.visualization.barplot import *
+from src.visualization.prettyconfusion import *
+
 
 project_dir =os.path.join(os.path.dirname(sys.argv[0]),"../../")
 sys.modules["cssnormaliser"] = cssnormaliser

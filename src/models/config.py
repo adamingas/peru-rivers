@@ -200,7 +200,7 @@ complicated_dictionary = [{ # [M] Mandatory, [O] Optional
         # can also be passed and custom grid spaces.
         "resampler": [{"name": "RandomOverSampler","katialo":34, "random_state": 11235}],# [O] If not given, None is used
         "css": [None, "CSS", "CSSLOG"], # [O] If not given, None is used
-        "cv": ["Grid", "Bayes"], # [O] The hyperparameter search  If not given, Grid is used possible options are {Grid, Bayes, Random}
+       # [O] The hyperparameter search  If not given, Grid is used possible options are {Grid, Bayes, Random}
         "scaler": [None, {"name": "StandardScaler", "with_mean": False}], # [O] Scaler to use on data, default None
         #"Validation_split_method":["GroupKFold"], # [O] How to split train set to validation folds. default is
         # Train_test_split_method
