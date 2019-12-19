@@ -26,15 +26,19 @@ def create_coef_df(list_of_coef,df_sourced):
     coef_df = pd.DataFrame(list_of_coef, columns=column_names)
     return coef_df
 
-def barplot_sort(coef_df,number_of_bars,title = "Feature Importance",fname = None,figsize= (9,9),plot = True):
+def barplot_sort(list_of_coef, number_of_bars, df_sourced, title = "Feature Importance", fname = None, figsize= (9,9), show = True):
     """
-    Sorts coefficient dataframe and plots the most importantd features as bars..
+    USes the coefficients found in the experiment and plots the most importantd features as bars.
+    Pass it the list of arrays found in the coefficient column of the random forest results.
 
-    :param coef_df: A dataframe of size  number of train-test splits x otus/features.
+    :param list_of_coef:list of arrays of feature importances
     :param number_of_bars: Number of bars to draw
+    :param df_sourced: The dataframe used to train the classifier (e.g. riverdf or fulldf)
     :param title: Title of graph, default is "Feature Importance"
-    :param plot: Whether or not to show the plot
+    :param show: Whether or not to show the plot
+    :param figsize: Size of figure in a tuple, default (9,9)
     """
+    coef_df = create_coef_df(list_of_coef,df_sourced)
     fig,ax = plt.subplots(figsize= figsize)
     mean_coef = coef_df.mean()
     sort_indx = np.argsort(mean_coef)
@@ -48,11 +52,11 @@ def barplot_sort(coef_df,number_of_bars,title = "Feature Importance",fname = Non
             axes = ax)
     ax.set_ylabel("Feature Importance")
     for tick in ax.get_xticklabels():
-        tick.set_rotation(45)
+        tick.set_rotation(90)
     fig.set_tight_layout(True)
     if fname:
         fig.savefig(fname,dpi = 300)
-    if plot:
+    if show:
         plt.show()
 
 def colour_generator_from_series(series):

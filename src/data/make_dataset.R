@@ -82,7 +82,7 @@ wwfdf[wwfdf[,"Water"] == "Black","River_size"] <- 0
 # Creating new labels based on easting location of samples
 # River location is 0 for Upper maranon, 1 for Mid maranon and Tapiche, and 2 for the rest
 wwfdf[,"River_loc"] <- rep(2,nrow(wwfdf))
-wwfdf[wwfdf[,"Area_group_name"] %in% c("Maranon_mid","Tapiche"),"River_loc"]<- 1
+wwfdf[wwfdf[,"Area_group_name"] %in% c("Maranon_mid","Huallaga"),"River_loc"]<- 1
 wwfdf[wwfdf[,"Area_group_name"] %in% c("Maranon_upper"),"River_loc"]<- 0
 
 

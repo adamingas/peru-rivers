@@ -293,19 +293,19 @@ def _test_data_class():
       annot, cmap, fmt, fz, lw, cbar, figsize, show_null_values, pred_val_axis)
 #
 
-def numpy_array_visualisation(dataframe,fname=None,title=None,label=False,custom_labels = None,figsize = (9,9)):
+def confusion_matrix_visualisation(confusion, fname=None, title=None, label=False, custom_labels = None, figsize = (9, 9), show = True):
     """
-    Takes an dataframe with a confusion column which is a numpy arrray. IT converts this array into a dataframe so that
+    Takes a confusion matrix (numpy). It converts this array into a dataframe so that
     it can work with the pretty_confusion_matrix function. The columns and rows of this confusion matrix dataframe
     are added that match with our peru river if label variable is set to true. Custom labels can also be added by
     a list to the custom_labels variable.
 
     Input:
-    dataframe: A pandas dataframe of results from runningsplittest
+    confusion: A numoy confusion matrix of results from running an experiment
     fname: If set to a string, it will save the image using that string as the filename. It can also contain a directory
-            eg "../report/images/water.png". It can also be set to a list to save multiple figures
+            eg "../report/images/water.png".
     title: default None
-           Name of title(s) for figures. Either a list or string
+           Name of title for figure.
     label: Bool default false
            If set to true, we use labels created for our specific problem
            Default labels:
@@ -318,40 +318,28 @@ def numpy_array_visualisation(dataframe,fname=None,title=None,label=False,custom
     #sns.set(font_scale=1)#for label size
     #fig2 = plt.figure()
 
-    for j,i in enumerate(dataframe.confusion):
-        fig, ax = plt.subplots(figsize=figsize, constrained_layout=True)
+    fig, ax = plt.subplots(figsize=figsize, constrained_layout=True)
 
-        print(dataframe.index[j])
+    row_column_labels = custom_labels
 
-        row_column_labels = custom_labels
 
-        if i.shape == (3,3) and label:
-            row_column_labels = ["UMar", "MMar,Tap", "LMar,Nap,Hua"]
-        elif i.shape == (4,4) and label:
-            row_column_labels =  ["Black","UMar","MLMar,Uc","Tap,Nap,Hua"]
-        elif i.shape == (2,2) and label:
-            row_column_labels =  ["Black","White"]
-        df_cm = DataFrame(i, index =row_column_labels,
-                             columns= row_column_labels)
-        print(df_cm)
-        figure_title = title
-        if type(title) is list:
-            figure_title = title[j]
+    if confusion.shape == (3, 3) and label:
+        row_column_labels = ["UMar", "MMar,Tap", "LMar,Nap,Hua"]
+    elif confusion.shape == (4, 4) and label:
+        row_column_labels =  ["Black","UMar","MLMar,Uc","Tap,Nap,Hua"]
+    elif confusion.shape == (2, 2) and label:
+        row_column_labels =  ["Black","White"]
+    df_cm = DataFrame(confusion, index =row_column_labels,
+                      columns= row_column_labels)
+    figure_title = title
 
-        pretty_plot_confusion_matrix(df_cm,axis = ax,title =figure_title,pred_val_axis="x")
-        #plt.figure(figsize = (10,7))
-#         plt.title(dataframe.index[j])
-#         sns.heatmap(df_cm, annot=True,annot_kws={"size": 16},cmap =sns.cm.rocket_r)
-#         plt.xlabel("Predicted")
-#         plt.ylabel("True")
-#         plt.show()
-        # fig.suptitle(title, fontsize=25)
+    pretty_plot_confusion_matrix(df_cm,axis = ax,title =figure_title,pred_val_axis="x")
 
-        if fname:
-            file_name = fname
-            if type(fname) is list:
-                file_name = fname[j]
-            fig.savefig(file_name,dpi = 300)
+    # fig.suptitle(title, fontsize=25)
+
+    if fname:
+        fig.savefig(fname,dpi = 300)
+    if show:
         plt.show()
 
     #plt.savefig("test.png")
