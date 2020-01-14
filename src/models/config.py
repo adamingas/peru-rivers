@@ -149,7 +149,7 @@ water_dissimilarity_dictionary = { # [M] Mandatory, [O] Optional
             #     Optional Arguments
             #     cv: Cross validation search method to use. How to search over hyperparameters. The choices currently
             #     implementes are random and grid. default is grid
-            #     n_iter: If random cv is chosen, n_iter controls the number of 
+            #     n_iter: If random cv is chosen, n_iter controls the number of
             #     grid: A dictionary of hyperparameters over which the cv method will search to find the best set
             #     Estimator Arguments: Any other arguments that the estimators use. Search for their sklearn
             #     implementation to find out what keys can be used.
@@ -227,7 +227,7 @@ water_similarity_dictionary = { # [M] Mandatory, [O] Optional
 # Another dictionary that performs experiments using different target column
 river_loc = { # [M] Mandatory, [O] Optional
     "Data": [{"features":"riverdf", "meta":"wwfdf","target_col": "River_loc"},
-    {"features":"fulldf", "target":"wwfdf","target_col": "River_loc"}], # [M] What set of features and target data sets to use
+    {"features":"fulldf", "meta":"wwfdf","target_col": "River_loc"}], # [M] What set of features and target data sets to use
     # [O] The target_col is the column where the labels can be found, default "target"
     # [O] Train_test_group is the column used to split the set to train and
     # test, default "group" if it exists, if not then "target" column
@@ -253,8 +253,8 @@ river_loc = { # [M] Mandatory, [O] Optional
 
 # Another dictionary that performs experiments using different target column
 river_size = { # [M] Mandatory, [O] Optional
-    "Data": [{"features":"riverdf", "target":"wwfdf","target_col": "River_size"},
-    {"features":"fulldf", "target":"wwfdf","target_col": "River_size"}], # [M] What set of features and target data sets to use
+    "Data": [{"features":"riverdf", "meta":"wwfdf","target_col": "River_size"},
+    {"features":"fulldf", "meta":"wwfdf","target_col": "River_size"}], # [M] What set of features and target data sets to use
     # [O] The target_col is the column where the labels can be found, default "target"
     # [O] Train_test_group is the column used to split the set to train and
     # test, default "group" if it exists, if not then "target" column
