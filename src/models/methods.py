@@ -1,6 +1,6 @@
-import numpy as np
 import pandas as pd
-from config import default_grids
+from cssnormaliser import CSSNormaliser
+from default_grids import default_grids
 # import pymc3 as pm
 # import theano.tensor as tt
 # from theano import shared
@@ -33,7 +33,8 @@ project_dir = os.path.join(dirname,"..","..")
 model_choices = {"RandomForest": RandomForestClassifier, "LogisticRegression": LogisticRegression, "SVM": SVC,
                  "BernoulliNB":BernoulliNB,"MultinomialNB":MultinomialNB,"ComplementNB":ComplementNB,
                  "KNN":KNeighborsClassifier}
-
+cv_choices = {"grid": "_cv", "bayes": "_bcv", "random": "_rcv"}
+css_choices = {"csslog": CSSNormaliser(log = True),"css": CSSNormaliser(), None: CSSNormaliser(identity=True)}
 classifier_to_string = {
     type(RandomForestClassifier()):"RandomForest",
     type(LogisticRegression()):"LogisticRegression",
@@ -479,4 +480,3 @@ class CV_models():
         return self.search_results.predict(features)
 
 
-cv_choices = {"grid": "_cv", "bayes": "_bcv", "random": "_rcv"}

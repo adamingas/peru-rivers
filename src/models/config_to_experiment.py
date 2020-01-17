@@ -1,10 +1,11 @@
-from methods import string_to_key, select_estimator, read_datasets, cv_choices
-from  sklearn import model_selection, preprocessing
+"""
+The script that converts the configuration file (dictionaries) into experiments and runs them
+"""
+from methods import string_to_key, select_estimator, read_datasets, cv_choices, css_choices
+from sklearn import model_selection, preprocessing
 import imblearn
 from cssnormaliser import CSSNormaliser
-from config import hypothesis
 from sklearn.model_selection import StratifiedKFold
-from sklearn import metrics
 import pandas as pd
 from experiment import Experiment
 import methods as mth
@@ -12,8 +13,25 @@ from itertools import product
 import os
 import warnings
 import time
+import argparse
+import importlib
+
+# Parsing the namae of the custom config file fron command line
+parser = argparse.ArgumentParser(description='Process some integers.')
+parser.add_argument('--config', metavar='config-file', type=str, nargs=1,default = "default-default_config.py",
+                    help='Name of custom config file',required =False)
+
+args = parser.parse_args()
+print("The package is using ",args.config," as the config file.")
+
+try:
+    configuration_list = importlib.import_module(args.config).configuration_list
+except AttributeError as e:
+    print("The configuration file provided does not contain a variable named configuration_list which is a list that "
+          "contains all dictionaries that define the experiments. Take a look in the default_config.py to see how the "
+          "variable is used.")
+    raise e
 # Storing the date and time to be used for saving the results and avoiding overwritting
-# TODO: Write optional argument parsing
 day_time_string = time.strftime("%m%d-%H:%M")
 warnings.filterwarnings("ignore", category=UserWarning)
 warnings.filterwarnings("ignore", category=DeprecationWarning)
@@ -21,11 +39,6 @@ warnings.filterwarnings("ignore", category=FutureWarning)
 
 dirname = os.path.dirname(__file__)
 project_dir = os.path.join(dirname,"..","..")
-
-"""
-A script that converts a configuration file (dictionary) into experiments
-"""
-
 
 
 
@@ -88,25 +101,6 @@ A script that converts a configuration file (dictionary) into experiments
 #         train_test = target_col
 #     return (features,target,target_col,train_test),X,y,y_target,y_group
 
-
-more_complex_dict = {
-    "Data": [("otu1", "meta1")],
-    "Kfold-traintest": ["StratifiedKFold"],
-    "models": [{
-        "model_name": ["RFR"],
-        "resampler": [{"name": "RandomOverSampler", "with_mean": False, "random_state": 11235}],
-        "css": [None, "CSSLOG"],
-        "cv": ["Grid", "Bayes"]
-    },
-        {
-            "model_name": ["LOG"],
-            "resampler": [{"name": "SMOTE", "k_neighbours": 4, "random_state": 11235}],
-            "css": [None, "CSSLOG"],
-            "cv": ["Grid"]
-        }]
-}
-literal_dict ={}
-css_choices = {"csslog": CSSNormaliser(log = True),"css": CSSNormaliser(), None: CSSNormaliser(identity=True)}
 data_directory ="../../data/processed/"
 
 def convert_string_dictionary(list_of_hypothesis:list):
@@ -218,7 +212,7 @@ def create_and_run_exp(list_of_hypothesis:list):
             continue
     return experiment_results,list_of_experiments
 
-experiment_results,__ = create_and_run_exp(hypothesis)
+experiment_results,__ = create_and_run_exp(configuration_list)
 resultsdf = pd.DataFrame(experiment_results)
 os.makedirs(os.path.join(project_dir,"results/supervised"), exist_ok=True) 
 resultsdf.to_pickle(os.path.join(project_dir,"results/supervised/results")+day_time_string+".pickl")
