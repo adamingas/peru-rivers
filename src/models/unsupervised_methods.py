@@ -2,6 +2,8 @@
 This file is meant to reproduce the unsupervised results, thus it is not extensible and only works
 for the particular datasets we used. The methods, however, are very flexible and can be used on a variety of datasets.
 """
+import os
+import time
 import numpy as np
 import pandas as pd
 from cssnormaliser import CSSNormaliser
@@ -16,14 +18,20 @@ import sklearn.preprocessing
 from sklearn import metrics
 from sklearn.decomposition import KernelPCA
 from pyclustering.cluster import kmedians,kmedoids
-path = "../../data/processed/"
-figure_path = "../../reports/figures/"
-wwfdf = pd.read_csv(filepath_or_buffer=path+"wwfdf",encoding="ISO-8859-1",index_col = 0)
-riverdf = pd.read_csv(path+"riverdf",index_col=0)
+
+# Finding the directory of the project folder
+dirname = os.path.dirname(__file__)
+project_dir = os.path.join(dirname,"..","..")
+path = os.path.join(project_dir,"data","processed")
+figure_path = os.path.join(project_dir,"reports","figures")
+wwfdf = pd.read_csv(filepath_or_buffer=path+"/wwfdf",encoding="ISO-8859-1",index_col = 0)
+riverdf = pd.read_csv(path+"/riverdf",index_col=0)
 riverdfCss = CSSNormaliser(log=False).fit_transform(riverdf)
 riverdfCssLog = CSSNormaliser(log=True).fit_transform(riverdf)
-fulldf = pd.read_csv(path+ "fulldf",index_col=0)
+fulldf = pd.read_csv(path+ "/fulldf",index_col=0)
 fulldfCssLog = CSSNormaliser(log=True).fit_transform(fulldf)
+
+day_time_string = time.strftime("%m%d-%H:%M")
 
 def edge_colors():
     edgecolors = np.array([[1,0,0]]*164,dtype = float)
@@ -95,23 +103,34 @@ def KMedians(partitions,dataframe, iterations =20):
             error = new_error
     return list_of_clusters_to_clusters(km_instance.get_clusters())
 
-# resultdf = pd.DataFrame(index=wwfdf.index, data =np.zeros(164))
-resultdf = pd.read_csv("../../results/unsupervised/unsupervised.csv",header = 0,index_col=0)
-# resultdf["KMeans7rivcsslogDetails"] = "KMeans(random_state=11235,n_jobs = -1,n_clusters=7).fit((riverdfCssLog))"
-# resultdf["KMeans7rivcsslog"] =  cluster.KMeans(random_state=11235,n_jobs = -1,n_clusters=7).fit((riverdfCssLog)).labels_
-# # cluster_on_map(resultdf["KMeans7rivcsslogDetails"],title="KMeans 7 river set",fname="test")
-# # plt.show()
-# resultdf["KMeans2rivcsslogDetails"] =  "KMeans(random_state=11235,n_jobs = -1,n_clusters=2).fit((riverdfCssLog)).labels_"
-# resultdf["KMeans2rivcsslog"] =  cluster.KMeans(random_state=11235,n_jobs = -1,n_clusters=2).fit((riverdfCssLog)).labels_
-#
-# resultdf["KMeans2fullcsslogDetails"] =  "KMeans(random_state=11235,n_jobs = -1,n_clusters=2).fit((fulldfCssLog)).labels_"
-# resultdf["KMeans2fullcsslog"] =  cluster.KMeans(random_state=11235,n_jobs = -1,n_clusters=2).fit((fulldfCssLog)).labels_
-#
-# resultdf["KMeans7rivDetails"] =  "KMeans(random_state=11235,n_jobs = -1,n_clusters=7).fit((riverdf)).labels_"
-# resultdf["KMeans7riv"] =  cluster.KMeans(random_state=11235,n_jobs = -1,n_clusters=7).fit((riverdf)).labels_
-#
-# resultdf["KMeans7rivcssDetails"] =  "KMeans(random_state=11235,n_jobs = -1,n_clusters=7).fit((riverdfCss)).labels_"
-# resultdf["KMeans7rivcss"] =  cluster.KMeans(random_state=11235,n_jobs = -1,n_clusters=7).fit((riverdfCss)).labels_
+# if the results directory does not exist then create it
+os.makedirs(os.path.join(project_dir,"results","unsupervised"), exist_ok=True)
+
+resultdf = pd.DataFrame(index=wwfdf.index)
+#resultdf = pd.read_csv("../../results/unsupervised/unsupervised.csv",header = 0,index_col=0)
+resultdf["KMeans7rivcsslogDetails"] = "KMeans(random_state=11235,n_jobs = -1,n_clusters=7).fit((riverdfCssLog))"
+resultdf["KMeans7rivcsslog"] =  cluster.KMeans(random_state=11235,n_jobs = -1,n_clusters=7).fit((riverdfCssLog)).labels_
+
+resultdf["KMeans2rivcsslogDetails"] =  "KMeans(random_state=11235,n_jobs = -1,n_clusters=2).fit((riverdfCssLog)).labels_"
+resultdf["KMeans2rivcsslog"] =  cluster.KMeans(random_state=11235,n_jobs = -1,n_clusters=2).fit((riverdfCssLog)).labels_
+
+resultdf["KMeans2fullcsslogDetails"] =  "KMeans(random_state=11235,n_jobs = -1,n_clusters=2).fit((fulldfCssLog)).labels_"
+resultdf["KMeans2fullcsslog"] =  cluster.KMeans(random_state=11235,n_jobs = -1,n_clusters=2).fit((fulldfCssLog)).labels_
+
+resultdf["KMeans3fullcsslogDetails"] = "KMeans(random_state=11235,n_jobs = -1,n_clusters=3).fit((fulldfCssLog))"
+resultdf["KMeans3fullcsslog"] =  cluster.KMeans(random_state=11235,n_jobs = -1,n_clusters=3).fit((fulldfCssLog)).labels_
+
+resultdf["KMeans7rivDetails"] =  "KMeans(random_state=11235,n_jobs = -1,n_clusters=7).fit((riverdf)).labels_"
+resultdf["KMeans7riv"] =  cluster.KMeans(random_state=11235,n_jobs = -1,n_clusters=7).fit((riverdf)).labels_
+
+resultdf["KMeans7rivcssDetails"] =  "KMeans(random_state=11235,n_jobs = -1,n_clusters=7).fit((riverdfCss)).labels_"
+resultdf["KMeans7rivcss"] =  cluster.KMeans(random_state=11235,n_jobs = -1,n_clusters=7).fit((riverdfCss)).labels_
+
+resultdf["HDBSCAN4rivcsslogDetails"] = "hdbscan.HDBSCAN(min_cluster_size=4,metric=\"euclidean\").fit_predict(riverdfCssLog)"
+resultdf["HDBSCAN4rivcsslog"] = hdbscan.HDBSCAN(min_cluster_size=4,metric="euclidean").fit_predict(riverdfCssLog)
+
+resultdf["HDBSCAN4fullcsslogDetails"] = "hdbscan.HDBSCAN(min_cluster_size=4,metric=\"euclidean\").fit_predict(fulldfCssLog)"
+resultdf["HDBSCAN4fullcsslog"] = hdbscan.HDBSCAN(min_cluster_size=4,metric="euclidean").fit_predict(fulldfCssLog)
 #
 # resultdf["KMedians2rivcsslogDetails"] = "KMedians(partitions=2,dataframe =riverdfCssLog)"
 # resultdf["KMedians2rivcsslog"] = KMedians(partitions=2,dataframe =riverdfCssLog)
@@ -122,18 +141,12 @@ resultdf = pd.read_csv("../../results/unsupervised/unsupervised.csv",header = 0,
 # resultdf["KMedians7fullcsslogDetails"] = "KMedians(partitions = 7,dataframe =fulldfCssLog)"
 # resultdf["KMedians7fullcsslog"] = KMedians(partitions = 7,dataframe =fulldfCssLog)
 #
-# resultdf["HDBSCAN4rivcsslogDetails"] = "hdbscan.HDBSCAN(min_cluster_size=4,metric=\"euclidean\").fit_predict(riverdfCssLog)"
-# resultdf["HDBSCAN4rivcsslog"] = hdbscan.HDBSCAN(min_cluster_size=4,metric="euclidean").fit_predict(riverdfCssLog)
 # cluster_on_map(resultdf["KMeans7rivcsslog"],title="KMeans 7 river set")
 
-# resultdf["HDBSCAN4fullcsslogDetails"] = "hdbscan.HDBSCAN(min_cluster_size=4,metric=\"euclidean\").fit_predict(fulldfCssLog)"
-# resultdf["HDBSCAN4fullcsslog"] = hdbscan.HDBSCAN(min_cluster_size=4,metric="euclidean").fit_predict(fulldfCssLog)
 #
-# resultdf["KMeans7fullcsslogDetails"] = "KMeans(random_state=11235,n_jobs = -1,n_clusters=7).fit((fulldfCssLog))"
-# resultdf["KMeans7fullcsslog"] =  cluster.KMeans(random_state=11235,n_jobs = -1,n_clusters=7).fit((fulldfCssLog)).labels_
 #
 # resultdf["KMedians7rivcsslogDetails"] = "KMedians(partitions = 7,dataframe =riverdfCssLog)"
 # resultdf["KMedians7rivcsslog"] = KMedians(partitions = 7,dataframe =riverdfCssLog)
-cluster_on_map(resultdf["KMedians7rivcsslog"],title="K-Medins 7 river set css log",fname="kmedians_7_rivcsslog.png")
+
 # save result as a csv in peru-rivers/results/unsupervised/unsupervised.csv
-# resultdf.to_csv("../../results/unsupervised/unsupervised.csv")
+resultdf.to_csv(os.path.join(project_dir,"results","unsupervised","unsupervised"+day_time_string+".csv"))

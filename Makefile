@@ -40,10 +40,21 @@ data:
 	
 
 ## Replicate the findings of the paper
-replicate: data requirements src/models/config.py
+replicate: unsupervised supervised
+	
+## Replicate only the supervised findings of the paper
+supervised: data requirements src/models/default_config.py
 	$(PYTHON_INTERPRETER) src/models/config_to_experiment.py
 	@cp src/opening_results.py results/supervised/
 	@echo "Results are stored in results/supervised as a pickle file.\n Open by running ipython -i opening_results.py inside the folder"
+
+## Replicate only the unsupervised part of the paper
+unsupervised: data requirements 
+	$(PYTHON_INTERPRETER) src/models/unsupervised_methods.py
+	@echo "Unsupervised result can be found in peru-rivers/results/unsupervised as a unsupervised<date and time>.csv file. "
+
+
+
 ## Delete all compiled Python files
 clean:
 	find . -type f -name "*.py[co]" -delete

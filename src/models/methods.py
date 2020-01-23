@@ -1,20 +1,17 @@
 import pandas as pd
-from cssnormaliser import CSSNormaliser
-from default_grids import default_grids
+from src.models.cssnormaliser import CSSNormaliser
+from src.models.default_grids import default_grids
 # import pymc3 as pm
 # import theano.tensor as tt
 # from theano import shared
 from sklearn.model_selection import  cross_val_score, GridSearchCV, StratifiedKFold, GroupKFold, \
     RandomizedSearchCV
-from timeit import default_timer as timer
 import re
 from itertools import product
 from sklearn.svm import SVC
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
-import sklearn.preprocessing as prepro
 from sklearn.neighbors import KNeighborsClassifier
-import sklearn.metrics as metrics
 from sklearn.naive_bayes import MultinomialNB,ComplementNB,GaussianNB,BernoulliNB
 import os
 from hyperopt import Trials,STATUS_OK,fmin,tpe,hp
@@ -448,7 +445,6 @@ class CV_models():
             support it
         """
 
-        # TODO: Incorporate bayes as well
         # Choosing the search method from Grid, Random and Bayes
         search_instance = self.search_methods[self.parameter_search](self.estimator, self.grid)
         # intersection of parameters of split method and kwargs
@@ -466,7 +462,9 @@ class CV_models():
             coefficients = getattr(self.search_results.best_estimator_, *intersection)
         except (TypeError,AttributeError):
             coefficients = None
-
+        # cv attribute of the GridSearchCV/RandomSearchCV/BayesSearchCV class is a generator which can't be pickled
+        # TODO: Change cv to list before passing it to searchCV classes.
+        self.search_results.cv = None
         return best_parameters, self.search_results, coefficients
 
     def predict(self, features):

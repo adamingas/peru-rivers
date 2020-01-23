@@ -14,7 +14,7 @@ Contents:
    purpose-of-project.md
    getting-started
    commands
-
+   code
 
 
 Indices and tables

@@ -1,5 +1,14 @@
-import methods as mth
-from cssnormaliser import CSSNormaliser
+"""
+.. module:: experiment
+   :platform: Unix, Windows
+   :synopsis: Contains the class used to create the Experiment class
+
+.. moduleauthor:: Andrew Carter <andrew@invalid.com>
+
+
+"""
+import src.models.methods as mth
+from src.models.cssnormaliser import CSSNormaliser
 import pandas as pd
 import numpy as np
 from timeit import default_timer as timer
@@ -44,52 +53,59 @@ warnings.filterwarnings("ignore", category=FutureWarning)
 # from hyperopt import base
 # base.have_bson = False
 
-
-
-
-
 class Experiment():
+    """This class is used for experiment creation.
+
+    """
     def __init__(self, meta_data:pd.DataFrame, estimator,grid:dict = None,estimator_name=None,  train_test_column="group",
                  target_column="target", names = (None, None), train_test_split_method=StratifiedKFold(n_splits=7),
                  css_normalisation=CSSNormaliser(identity=True), validation_method_group: tuple = (None, None),
                  scaler=FunctionTransformer(validate=False), resampler=FunctionSampler(),
-                 cv_suffix: str = "_cv", **kwargs):
+                 cv_suffix: str = "_cv",features = None, **kwargs):
         """
-        Each instance of this class is a classification experiment
-        which stores all the configurations and the results.
-        This object can be used to run a hypothesis by supplying it with X,y
-        :param meta_data:
-            The meta data set that contains the target, train_test_group and validation_group columns
+        Each instance of this class is a classification experiment which stores all the configurations and the results.
+        This object is used to run the cross-validation (CV) by supplying it with X,y
+
+        :param meta_data: The meta-data dataframe that contains the target, train_test_group and validation_group columns.
+            The default names for the columns are "target" for the target variable, and "group" for the train_test_group
+            and validation_group
         :param train_test_split_method: StratifiedKFold or GroupKFold
         :param estimator: estimator object,
         :param grid: grid of hyperparameters
         :param estimator_name: name of estimator
         :param css_normalisation: CSSNormalisation object
-        :param validation_method_group: (StratifiedKFold or GroupKFold,column_name_for_grouping)
+        :param validation_method_group: A tuple which specifies the method used to split the train set into folds,
+                                        and which column of the meta_data is going to be used as the group variable
+                                        (StratifiedKFold or GroupKFold,column_name_for_grouping)
         :param scaler: sklearn.preprocessing method
         :param resampler: imblearn.over_sampler method
         :param cv_method: str
             Choose from {"_cv","_bcv","_rcv"}
         :param names: (str,str)
             Names of feature and meta data set
+        :param features: pandas DataFrame
+            The features to be used for running the experiment or for fitting. If not given then when calling then run
+            method of the object, they have to be passed together with meta_data
         :param kwargs:
         """
         self.names= names
         self.target_column = mth.checking_columns(dataframe=meta_data, column=target_column, x = target_column)
         self.y_true = meta_data.loc[:, self.target_column]
-        try:
-            # Get group column
-            self.train_test_split_column = mth.checking_columns(meta_data, train_test_column, x=train_test_column)
-        except KeyError:
-            # If it doesnt exist assign target column as group column as well
-            self.train_test_split_column = self.target_column
+
+        # Get group column if it is present in the meta_data frame. If not, the target column is used
+        self.train_test_split_column = mth.checking_columns(meta_data, train_test_column, x=train_test_column,
+                                                            handle=lambda x: self.target_column)
+
         self.css = css_normalisation
         self.train_test_split_method = train_test_split_method
+        # IF validation_method_group is None then the validation method is the same as the train-test splitting method
         if not validation_method_group[0]:
             self.validation_method = train_test_split_method
+        # Otherwise the validation metho is the first element of the tuple validation_method_group
         else:
             self.validation_method = validation_method_group[0]
 
+        # The validation group column is set to the train-test split column if not specified in the validation_method_group
         self.validation_group = mth.checking_columns(dataframe=meta_data, column=validation_method_group[1],
                                                      x= validation_method_group[1], handle=lambda x: self.train_test_split_column)
 
@@ -106,10 +122,17 @@ class Experiment():
             self.estimator_name = type(self.estimator).__name__
         else:
             self.estimator_name = estimator_name
+        self.meta_data = meta_data
+        self.features = features
         self.kwargs = kwargs
 
 
     def default_grid(self):
+        """If a hyperparameter grid is not specified when the experiment is created then this method is used to
+        find the appropriate grid. If the same experiment is used but with a different (deafult) classifier then use
+        this method to update the grid.
+
+        """
         estimator_name = mth.classifier_to_string.get(type(self.estimator))
         if type(estimator_name) == str:
             self.grid = mth.default_grids.get(estimator_name+self.cv)
@@ -117,12 +140,34 @@ class Experiment():
             raise Exception("These are the classifiers we have default grids for. If your classifier is not included in these"
                   " then pass a grid to the Experiment instance. {}".format(mth.classifier_to_string.keys()))
 
-    def run(self, X:pd.DataFrame,y:pd.DataFrame):
+    def run(self, X:pd.DataFrame = None,y:pd.DataFrame = None):
         """
-        Runs the experiment on the data set using the parameters used to initialise the object.
+        Runs the experiment on the data set using the attributes used to create the object.
         The results are stored as attributes of the object.
-        :return:
+
+        :param X: The features used to train the classifiers. If None, then the features given in the construction of
+            the objection will be used
+        :param y: The meta-data dataframe used to initiate the experiment object. It's a redundant variable that's only
+            left in the package in case the user decides to delete the meta-data attribute before saving the object into
+            pickle format in order to conserve space.
+
+        :return: A dictionary with the following keys
+            "y_pred": predictions made by classifier
+            "best_parameters": best hyper parameters
+            "coefficients": coefficients of features if present
+            "time": time it takes for the procedure to complete
+            "false_samples": which samples where wrongly classified
+            "confusion":confusion matrix of
         """
+        if X is None:
+            if self.features is None:
+                raise AttributeError("No features given. Either pass a feature Dataframe to the run method's X variable "
+                                     "or to the features object attribute.")
+            else:
+                X = self.features
+        if y is None:
+            # We dont check wether this attribute is None since it is requiried in the construction of the object
+            y = self.meta_data
 
         # Getting features, target and group from data_tuple. Also store name to report it at the end
         features, target, train_test_group,validation_group = X, y.loc[:,self.target_column], \
@@ -161,7 +206,8 @@ class Experiment():
             # Perform grid CV using Kfolds as folds.
             # set_parameters are best hyperparameters of this set
             # set_coef are feature coefficients for this set
-            set_parameters, set_coef = self.fit(x_train=  xtrain,meta_train= ytrain,validation_group=validation_group.iloc[train_index])
+            set_parameters, set_coef = self.fit(x_train=  xtrain,meta_train= ytrain,
+                                                validation_group=validation_group.iloc[train_index])
             # Predict class of test set
             set_predictions = self.predict(xtest)
 
@@ -188,7 +234,7 @@ class Experiment():
         end = timer()
         self.time = end -start
         dictr = {"y_pred": self.y_pred, "best_parameters": self.best_parameters, "coefficients": self.coefficients, "time": self.time,
-                 "false_samples": false_samples,"confusion":confusion,"confusion_at_the_end":self.confusion}
+                 "false_samples": false_samples,"confusion":self.confusion}
         self.accuracy = metrics.accuracy_score(self.y_true,self.y_pred)
         return dictr
 
@@ -196,14 +242,14 @@ class Experiment():
         """
         Trains the model by cross validation using the parameters of the object.
         For this method, the cv generator is taken to be the validation_method. train_test_method which was used
-        un the run() method to split the set into train and test is not used in this case.
+        in the run() method to split the set into train and test is not used in this case.
+
         :param x_train: samples with features
         :param meta_train: meta data with target and validation columns
         :param validation_group: an array with the validation group values.
             if none is given then the meta_train is indexed to get the target and validation columns. If an array is given
             then the meta_train is taken to be just the target variable that will be used to fit the model
-        :return:
-        A trained model that can be used to predict labels of a new data set
+        :return: best set of hyperparameters from crossvalidation and the feature coefficients
         """
         np.random.seed(11235)
 

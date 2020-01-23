@@ -1,31 +1,49 @@
 """
 The script that converts the configuration file (dictionaries) into experiments and runs them
 """
-from methods import string_to_key, select_estimator, read_datasets, cv_choices, css_choices
+from src.models.methods import string_to_key, select_estimator, read_datasets, cv_choices, css_choices
 from sklearn import model_selection, preprocessing
 import imblearn
-from cssnormaliser import CSSNormaliser
+from src.models.cssnormaliser import CSSNormaliser
 from sklearn.model_selection import StratifiedKFold
 import pandas as pd
-from experiment import Experiment
-import methods as mth
+from src.models.experiment import Experiment
+import src.models.methods as mth
 from itertools import product
 import os
 import warnings
 import time
 import argparse
 import importlib
-
+import pickle
 # Parsing the namae of the custom config file fron command line
-parser = argparse.ArgumentParser(description='Process some integers.')
-parser.add_argument('--config', metavar='config-file', type=str, nargs=1,default = "default-default_config.py",
-                    help='Name of custom config file',required =False)
+parser = argparse.ArgumentParser(description='The script that converts the configuration file (dictionaries) into '
+                                             'experiments and runs them. Any arguments passed through the command line'
+                                             ' are for custom runs.')
+parser.add_argument('--config', metavar='config-file', type=str, nargs=1,default = "default_config",
+                    help='Name of custom config file without .py extension, eg custom_config'
+                         ' If not provided then the dafault_config.py is used as the '
+                         'configuration. The custom configuration file has to be in the same folder as the '
+                         'config_to_experiment.py file.',required =False)
+parser.add_argument('--name', metavar='name', type=str, nargs=1,default = "",
+                    help='A string to be appended at the start of the filename of the results file produced'
+                         ,required =False)
 
 args = parser.parse_args()
+args.config = os.path.basename(args.config[0])
+args.name = args.name[0]
+if args.config[-3:] == ".py":
+    args.config = args.config[:-3]
 print("The package is using ",args.config," as the config file.")
 
 try:
     configuration_list = importlib.import_module(args.config).configuration_list
+    if args.config != "default_config" and args.name == "":
+    # this will be appended at the start of the results file to indicate that it was produced by a custom configuration
+    # file
+        results_prefix = "custom"
+    else:
+        results_prefix = args.name
 except AttributeError as e:
     print("The configuration file provided does not contain a variable named configuration_list which is a list that "
           "contains all dictionaries that define the experiments. Take a look in the default_config.py to see how the "
@@ -113,7 +131,7 @@ def convert_string_dictionary(list_of_hypothesis:list):
     list of dictionaries of all combinations
     """
     list_of_experiment_configurations = []
-
+    print("Converting configuration file into a list of attributes that will be used for creating Experiments")
     # Looping through all dictionaries in the list
     for hypothesis in list_of_hypothesis:
         # Each hypothesis is made up of data, including target and group column, and how train and test are created
@@ -178,10 +196,24 @@ def convert_string_dictionary(list_of_hypothesis:list):
 
     return list_of_experiment_configurations
 
-def create_and_run_exp(list_of_hypothesis:list):
+def create_and_run_exp(configurations:list):
+    """
+    Creates the experiments for the list of parsed configurations. E
+    :param configurations:
+    :return:
+    """
     list_of_experiments = []
     experiment_results = {}
-    for settings in convert_string_dictionary(list_of_hypothesis):
+    # a list of all the parsen in configurations that are going to be used for experiment creation
+    list_of_settings = convert_string_dictionary(configurations)
+    os.makedirs(os.path.join(project_dir, "experiments"), exist_ok=True)
+
+    experiments_file = open(project_dir+ "/experiments/experiment_objects"+day_time_string+".pickl","wb")
+    # The first element in the pickle is the number of experiments to be saved
+    pickle.dump(len(list_of_settings),experiments_file)
+    print("Converting the list of settings to Experiment objects. Upon running each Experiment they are then saved in "
+          "a pickle file found in peru-rivers/experiments")
+    for settings in list_of_settings:
         data_dictionary = settings.pop("data_tuples")
         try: X = data_dictionary.pop("X")
         except KeyError: pass
@@ -189,8 +221,10 @@ def create_and_run_exp(list_of_hypothesis:list):
         list_of_experiments.append(exp_instance)
         try:
             print(exp_instance)
-
+            # Run experiment
             exp_result = exp_instance.run(X,data_dictionary["meta_data"])
+            # Store object
+            pickle.dump(exp_instance,experiments_file)
             list_of_experiments.append(exp_instance)
             # adding to results the parameters of the experiment to make it easier to store them
             exp_result = {**exp_instance.return_dictionary(),**exp_result,"accuracy":exp_instance.accuracy}
@@ -210,11 +244,12 @@ def create_and_run_exp(list_of_hypothesis:list):
             # print(exp_instance.validation_method," can't split ", exp_instance.validation_group, " because the number of "
             #         "splits is more than the number of factors in the grouping variable")
             continue
+    experiments_file.close()
     return experiment_results,list_of_experiments
 
 experiment_results,__ = create_and_run_exp(configuration_list)
 resultsdf = pd.DataFrame(experiment_results)
-os.makedirs(os.path.join(project_dir,"results/supervised"), exist_ok=True) 
-resultsdf.to_pickle(os.path.join(project_dir,"results/supervised/results")+day_time_string+".pickl")
+# if the results directory does not exist then create it
+os.makedirs(os.path.join(project_dir,"results/supervised"), exist_ok=True)
+resultsdf.to_pickle(os.path.join(project_dir,"results/supervised",results_prefix+"results")+day_time_string+".pickl")
 
-# TODO: Check after objection creation if we can check for duplicates using fancy __eq__ and __repl__

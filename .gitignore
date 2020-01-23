@@ -82,6 +82,7 @@ target/
 # exclude results also
 results/
 reports/
+experiments/
 # Mac OS-specific storage files
 .DS_Store
 

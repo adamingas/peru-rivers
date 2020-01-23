@@ -1,4 +1,4 @@
-# Run this file interactively. It will set up the right environment t be able to open 
+# Run this file interactively. It will set up the right environment to be able to open 
 # the picke files
 # To run interactively execute
 # python -i opening_results.py
