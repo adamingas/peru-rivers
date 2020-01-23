@@ -5,8 +5,9 @@
 SPHINXOPTS    =
 SPHINXBUILD   = sphinx-build
 PAPER         =
-BUILDDIR      = _build
-
+#BUILDDIR      = _build
+# Using another folder as the build directory that is outside this project. This folder will be synced with the gh-pages repository of the project
+BUILDDIR 	  = ../peru-rivers-doc-builds
 # Internal variables.
 PAPEROPT_a4     = -D latex_paper_size=a4
 PAPEROPT_letter = -D latex_paper_size=letter
