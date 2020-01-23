@@ -1,0 +1,220 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Code Documentation &#8212; peru-rivers 0.1 documentation</title>
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Commands" href="commands.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="commands.html" title="Commands"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">peru-rivers 0.1 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="code-documentation">
+<h1>Code Documentation<a class="headerlink" href="#code-documentation" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="module-src.models">
+<span id="init-file"></span><h2>Init file<a class="headerlink" href="#module-src.models" title="Permalink to this headline">¶</a></h2>
+<p>Package for experiment creation and running.</p>
+</div>
+<div class="section" id="module-src.models.experiment">
+<span id="experiment"></span><h2>Experiment<a class="headerlink" href="#module-src.models.experiment" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-experiment"></span><dl class="class">
+<dt id="src.models.experiment.Experiment">
+<em class="property">class </em><code class="sig-prename descclassname">src.models.experiment.</code><code class="sig-name descname">Experiment</code><span class="sig-paren">(</span><em class="sig-param">meta_data: pandas.core.frame.DataFrame</em>, <em class="sig-param">estimator</em>, <em class="sig-param">grid: dict = None</em>, <em class="sig-param">estimator_name=None</em>, <em class="sig-param">train_test_column='group'</em>, <em class="sig-param">target_column='target'</em>, <em class="sig-param">names=(None</em>, <em class="sig-param">None)</em>, <em class="sig-param">train_test_split_method=StratifiedKFold(n_splits=7</em>, <em class="sig-param">random_state=None</em>, <em class="sig-param">shuffle=False)</em>, <em class="sig-param">css_normalisation=CSSNormaliser(log = False</em>, <em class="sig-param">identity = True)</em>, <em class="sig-param">validation_method_group: tuple = (None</em>, <em class="sig-param">None)</em>, <em class="sig-param">scaler=FunctionTransformer(accept_sparse=False</em>, <em class="sig-param">check_inverse=True</em>, <em class="sig-param">func=None</em>, <em class="sig-param">inv_kw_args=None</em>, <em class="sig-param">inverse_func=None</em>, <em class="sig-param">kw_args=None</em>, <em class="sig-param">pass_y='deprecated'</em>, <em class="sig-param">validate=False)</em>, <em class="sig-param">resampler=FunctionSampler(accept_sparse=True</em>, <em class="sig-param">func=None</em>, <em class="sig-param">kw_args=None)</em>, <em class="sig-param">cv_suffix: str = '_cv'</em>, <em class="sig-param">features=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#src.models.experiment.Experiment" title="Permalink to this definition">¶</a></dt>
+<dd><p>This class is used for experiment creation.</p>
+<dl class="method">
+<dt id="src.models.experiment.Experiment.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">meta_data: pandas.core.frame.DataFrame</em>, <em class="sig-param">estimator</em>, <em class="sig-param">grid: dict = None</em>, <em class="sig-param">estimator_name=None</em>, <em class="sig-param">train_test_column='group'</em>, <em class="sig-param">target_column='target'</em>, <em class="sig-param">names=(None</em>, <em class="sig-param">None)</em>, <em class="sig-param">train_test_split_method=StratifiedKFold(n_splits=7</em>, <em class="sig-param">random_state=None</em>, <em class="sig-param">shuffle=False)</em>, <em class="sig-param">css_normalisation=CSSNormaliser(log = False</em>, <em class="sig-param">identity = True)</em>, <em class="sig-param">validation_method_group: tuple = (None</em>, <em class="sig-param">None)</em>, <em class="sig-param">scaler=FunctionTransformer(accept_sparse=False</em>, <em class="sig-param">check_inverse=True</em>, <em class="sig-param">func=None</em>, <em class="sig-param">inv_kw_args=None</em>, <em class="sig-param">inverse_func=None</em>, <em class="sig-param">kw_args=None</em>, <em class="sig-param">pass_y='deprecated'</em>, <em class="sig-param">validate=False)</em>, <em class="sig-param">resampler=FunctionSampler(accept_sparse=True</em>, <em class="sig-param">func=None</em>, <em class="sig-param">kw_args=None)</em>, <em class="sig-param">cv_suffix: str = '_cv'</em>, <em class="sig-param">features=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#src.models.experiment.Experiment.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Each instance of this class is a classification experiment which stores all the configurations and the results.
+This object is used to run the cross-validation (CV) by supplying it with X,y</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>meta_data</strong> – The meta-data dataframe that contains the target, train_test_group and validation_group columns.
+The default names for the columns are “target” for the target variable, and “group” for the train_test_group
+and validation_group</p></li>
+<li><p><strong>train_test_split_method</strong> – StratifiedKFold or GroupKFold</p></li>
+<li><p><strong>estimator</strong> – estimator object,</p></li>
+<li><p><strong>grid</strong> – grid of hyperparameters</p></li>
+<li><p><strong>estimator_name</strong> – name of estimator</p></li>
+<li><p><strong>css_normalisation</strong> – CSSNormalisation object</p></li>
+<li><p><strong>validation_method_group</strong> – A tuple which specifies the method used to split the train set into folds,
+and which column of the meta_data is going to be used as the group variable
+(StratifiedKFold or GroupKFold,column_name_for_grouping)</p></li>
+<li><p><strong>scaler</strong> – sklearn.preprocessing method</p></li>
+<li><p><strong>resampler</strong> – imblearn.over_sampler method</p></li>
+<li><p><strong>cv_method</strong> – str
+Choose from {“_cv”,”_bcv”,”_rcv”}</p></li>
+<li><p><strong>names</strong> – (str,str)
+Names of feature and meta data set</p></li>
+<li><p><strong>features</strong> – pandas DataFrame
+The features to be used for running the experiment or for fitting. If not given then when calling then run
+method of the object, they have to be passed together with meta_data</p></li>
+<li><p><strong>kwargs</strong> – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="src.models.experiment.Experiment.default_grid">
+<code class="sig-name descname">default_grid</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.models.experiment.Experiment.default_grid" title="Permalink to this definition">¶</a></dt>
+<dd><p>If a hyperparameter grid is not specified when the experiment is created then this method is used to
+find the appropriate grid. If the same experiment is used but with a different (deafult) classifier then use
+this method to update the grid.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="src.models.experiment.Experiment.fit">
+<code class="sig-name descname">fit</code><span class="sig-paren">(</span><em class="sig-param">x_train: pandas.core.frame.DataFrame</em>, <em class="sig-param">meta_train: pandas.core.frame.DataFrame</em>, <em class="sig-param">validation_group=None</em><span class="sig-paren">)</span><a class="headerlink" href="#src.models.experiment.Experiment.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Trains the model by cross validation using the parameters of the object.
+For this method, the cv generator is taken to be the validation_method. train_test_method which was used
+in the run() method to split the set into train and test is not used in this case.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x_train</strong> – samples with features</p></li>
+<li><p><strong>meta_train</strong> – meta data with target and validation columns</p></li>
+<li><p><strong>validation_group</strong> – an array with the validation group values.
+if none is given then the meta_train is indexed to get the target and validation columns. If an array is given
+then the meta_train is taken to be just the target variable that will be used to fit the model</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>best set of hyperparameters from crossvalidation and the feature coefficients</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="src.models.experiment.Experiment.return_dictionary">
+<code class="sig-name descname">return_dictionary</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#src.models.experiment.Experiment.return_dictionary" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns some parameters of the instance in a dictionary
+:return:</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="src.models.experiment.Experiment.run">
+<code class="sig-name descname">run</code><span class="sig-paren">(</span><em class="sig-param">X: pandas.core.frame.DataFrame = None</em>, <em class="sig-param">y: pandas.core.frame.DataFrame = None</em><span class="sig-paren">)</span><a class="headerlink" href="#src.models.experiment.Experiment.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Runs the experiment on the data set using the attributes used to create the object.
+The results are stored as attributes of the object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>X</strong> – The features used to train the classifiers. If None, then the features given in the construction of
+the objection will be used</p></li>
+<li><p><strong>y</strong> – The meta-data dataframe used to initiate the experiment object. It’s a redundant variable that’s only
+left in the package in case the user decides to delete the meta-data attribute before saving the object into
+pickle format in order to conserve space.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A dictionary with the following keys
+“y_pred”: predictions made by classifier
+“best_parameters”: best hyper parameters
+“coefficients”: coefficients of features if present
+“time”: time it takes for the procedure to complete
+“false_samples”: which samples where wrongly classified
+“confusion”:confusion matrix of</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="auto-method">
+<h2>Auto-Method<a class="headerlink" href="#auto-method" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Code Documentation</a><ul>
+<li><a class="reference internal" href="#module-src.models">Init file</a></li>
+<li><a class="reference internal" href="#module-src.models.experiment">Experiment</a></li>
+<li><a class="reference internal" href="#auto-method">Auto-Method</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="commands.html"
+                        title="previous chapter">Commands</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/code.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="commands.html" title="Commands"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">peru-rivers 0.1 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright .
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.1.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,216 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>peru-rivers &#8212; peru-rivers 0.1 documentation</title>
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Purpose" href="purpose-of-project.html" />
+    <link rel="prev" title="peru-rivers documentation!" href="index.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="purpose-of-project.html" title="Purpose"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="peru-rivers documentation!"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">peru-rivers 0.1 documentation</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="peru-rivers">
+<h1>peru-rivers<a class="headerlink" href="#peru-rivers" title="Permalink to this headline">¶</a></h1>
+<p>Machine Learning analysis performed on eDNA samples sourced from Norther Peruvian Rivers.</p>
+<div class="section" id="project-organization">
+<h2>Project Organization<a class="headerlink" href="#project-organization" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><p>├── LICENSE
+├── Makefile           &lt;- Makefile with commands like <cite>make data</cite> or <cite>make train</cite>
+├── README.md          &lt;- The top-level README for developers using this project.
+├── data
+│   ├── processed      &lt;- The final, canonical data sets for modeling.
+│   └── raw            &lt;- The original, immutable data dump.
+│
+├── docs               &lt;- The documentation of the project using Sphinx (website).
+│                         Still a  work in progress.
+│
+├── experiments        &lt;- Saved objects of the Experiments class saved after running the config-to-experiment.py
+│                         script.Each object includes the trained model and the data used to train it,as well as all
+│                         the parameters used to set up the experiment
+│
+├── notebooks          &lt;- Jupyter notebooks. Naming convention is
+│                         the creator’s initials, and a short <cite>-</cite> delimited description, e.g.
+│                         <cite>as-unsupervised-ml</cite>.
+│
+├── references         &lt;- Data dictionaries, manuals, and all other explanatory materials.
+│
+├── reports            &lt;- Generated analysis as HTML, PDF, LaTeX, etc.
+│   └── figures        &lt;- Generated graphics and figures to be used in reporting
+│
+├── requirements.txt   &lt;- The requirements file for reproducing the analysis environment, e.g.
+│                         generated with <cite>pip freeze &gt; requirements.txt</cite>
+│
+├── results            &lt;- The results from running the program saved in pickle format.
+│   ├── supervised     &lt;- The results from classification. To interact with the files the
+│   │                      opening-results.py script should be run interactively.
+│   └── unsupervised   &lt;- The clustering results saved in csv file format.
+├── setup.py           &lt;- makes project pip installable (pip install -e .) so src can be imported
+├── src                &lt;- Source code for use in this project.
+│   ├── __init__.py    &lt;- Makes src a Python module
+│   │
+│   ├── data           &lt;- Scripts to generate data
+│   │   └── make_dataset.R
+│   │
+│   ├── features       &lt;- Scripts to turn raw data into features for modeling
+│   │   └── build_features.py
+│   │
+│   ├── models         &lt;- Scripts to configure and run the experiments.
+│   │   │
+│   │   ├── config-to-experiment.py &lt;- Reads the config file, generates experiment objects and runs them
+│   │   ├── deafault_config.py      &lt;- Default configuration file for the creation of experiments
+│   │   ├── custom_config.py        &lt;- Custom configuration file for the creation of experiments
+│   │   ├── default_grids.py        &lt;- Default hyperparameter grids that are searched over during CrossValidation
+│   │   ├── cssnormaliser.py        &lt;- Python wrapper for CSS normalisation
+│   │   ├── experiment.py           &lt;- Experiment Class
+│   │   ├── methods.py              &lt;- Methods used by program to train and test classifiers
+│   │   ├── package_installer.R     &lt;- R function used to install R libraries
+│   │   ├── r_install.py            &lt;- Checks and installs necessary R libraries
+│   │   └── unsupervised_methods.py &lt;- Script that reproduces unsupervised section of paper
+│   │
+│   └── visualization  &lt;- Scripts to create results oriented visualizations
+│       │── barplot.py              &lt;- Functions to generate feature importance bar plots
+│       ├── classification_on_map.py&lt;- Functions to plot classification results using location axes
+│       └── prettyconfusion.py      &lt;- Functions to draw confusion matrix
+│
+└── tox.ini            &lt;- tox file with settings for running tox; see tox.testrun.org</p>
+</div></blockquote>
+<p>This project contains the package and set up requirements for reproducing the machine learning results of the NatureMetrics peru paper. The Makefile should be enough for reproducing the results. To create custom experiments and run them the <code class="docutils literal notranslate"><span class="pre">config.py</span></code> and <code class="docutils literal notranslate"><span class="pre">config-to-experiment.py</span></code> files should be used.</p>
+</div>
+</div>
+<div class="section" id="using-the-makefile">
+<h1>Using the Makefile<a class="headerlink" href="#using-the-makefile" title="Permalink to this headline">¶</a></h1>
+<p>To use the Makefile the user needs the GNU make program, available for linux, macos and windows. To view all possible commands of the Makefile start a shell in the projects directory and execute the command <code class="docutils literal notranslate"><span class="pre">make</span></code>. This will list all the available options. The programming languages used in the package are python and R, so make sure they are installed. Then run
+<code class="docutils literal notranslate"><span class="pre">`</span>
+<span class="pre">make</span> <span class="pre">create-environment</span>
+<span class="pre">`</span></code>
+To create a new conda or virtual environment. Then, activate the new environment using
+<code class="docutils literal notranslate"><span class="pre">source</span> <span class="pre">activate</span> <span class="pre">peru-rivers</span></code>
+To install the necessary packages run
+<code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">requirements</span></code>
+This will install in the <code class="docutils literal notranslate"><span class="pre">peru-rivers</span></code> conda environment all the necessary python and R packages. If the metagenomeSeq package is not installed in the default R location then the BiocManager will be installed in order to download and install metagenomeSeq, The R libraries will be stored in a folder named R in the root directory of the project.</p>
+<p>To reproduce the results choose the replicate option
+<code class="docutils literal notranslate"><span class="pre">`make</span> <span class="pre">replicate`</span></code>
+The results will be saved in the <code class="docutils literal notranslate"><span class="pre">`/results/supervised/`</span></code> folder as a pickle file and <code class="docutils literal notranslate"><span class="pre">`/results/unsupervised/`</span></code> as a csv file. To explore the supervised results navigate to the folder in a shell and run
+<code class="docutils literal notranslate"><span class="pre">`ipython</span> <span class="pre">-i</span> <span class="pre">opening_results.py`</span></code>
+which will open up an interactive python session preloaded with all the necessary functions and classes needed to produce the paper plots.
+The unsupervised csv file’s rows are the samples of the peru rivers. The columns indicate which clustering algorithm, data set and transformation techniques were used to obtain the results. The number assigned to each sample is it’s group membership in the clustering result.</p>
+</div>
+<div class="section" id="custom-configuration">
+<h1>Custom configuration<a class="headerlink" href="#custom-configuration" title="Permalink to this headline">¶</a></h1>
+<p>The package can also be used to run experiments not design for the purpose of the paper. To do so, the user will need to modify files in the <code class="docutils literal notranslate"><span class="pre">`src/models/`</span></code> directory. The script that creates experiments from the configuration files and also runs them is the <code class="docutils literal notranslate"><span class="pre">`config_to_experiment.py`</span></code>. Running it using <code class="docutils literal notranslate"><span class="pre">`python</span> <span class="pre">config_to_experiment.py`</span></code> uses the default configuration (replicating the paper’s supervised results) and saves the results in the <code class="docutils literal notranslate"><span class="pre">`results/supervised/`</span></code> directory. The experiments are saved in the <code class="docutils literal notranslate"><span class="pre">`experiments/`</span></code> directory.</p>
+<p>To run custom experiments, the user has to edit the <code class="docutils literal notranslate"><span class="pre">`src/models/custom_config.py`</span></code> file or create a new one that follows its structure. Instructions on how the configuration file works can be found as comments inside the file itself.
+The purpose of the configuration file is the mass creation of experiments which have some attributes common between them (let’s say the use of CSS normalisation and the datasets) but differ in another (which classifier is to be used). All possible combinations of settings are put in a dictionary and the product of all possible choices is used as attributes to create experiments.</p>
+<dl>
+<dt>To use the custom configuration file use the <code class="docutils literal notranslate"><span class="pre">`--config`</span></code> argument when running the script, and pass it the name of the configuration file. If the current directory is src/models/ and the chosen configuration file is custom_config.py then run:</dt><dd><p><code class="docutils literal notranslate"><span class="pre">`python</span> <span class="pre">config_to_experiment.py</span> <span class="pre">--config</span> <span class="pre">custom_config`</span></code></p>
+<p>To append a custom string at the start of the results filename use the <code class="docutils literal notranslate"><span class="pre">`--name`</span></code> argument and pass the desired string after it.
+Running</p>
+</dd>
+</dl>
+<p><code class="docutils literal notranslate"><span class="pre">`python</span> <span class="pre">config_to_experiment.py</span> <span class="pre">--config</span> <span class="pre">custom_config</span> <span class="pre">--name</span> <span class="pre">1000rivers`</span></code>
+will produce a results file with the name “1000riversresults&lt;date-time&gt;”</p>
+<hr class="docutils" />
+<p>&lt;p&gt;&lt;small&gt;Project based on the &lt;a target=”_blank” href=”<a class="reference external" href="https://drivendata.github.io/cookiecutter-data-science/">https://drivendata.github.io/cookiecutter-data-science/</a>”&gt;cookiecutter data science project template&lt;/a&gt;. #cookiecutterdatascience&lt;/small&gt;&lt;/p&gt;</p>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">peru-rivers</a><ul>
+<li><a class="reference internal" href="#project-organization">Project Organization</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#using-the-makefile">Using the Makefile</a></li>
+<li><a class="reference internal" href="#custom-configuration">Custom configuration</a></li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">peru-rivers documentation!</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="purpose-of-project.html"
+                        title="next chapter">Purpose</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/includeme.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="purpose-of-project.html" title="Purpose"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="peru-rivers documentation!"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">peru-rivers 0.1 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright .
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.1.
+    </div>
+  </body>
+</html>
