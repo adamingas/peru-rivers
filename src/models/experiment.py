@@ -1,10 +1,6 @@
 """
 .. module:: experiment
-   :platform: Unix, Windows
    :synopsis: Contains the class used to create the Experiment class
-
-.. moduleauthor:: Andrew Carter <andrew@invalid.com>
-
 
 """
 import src.models.methods as mth
@@ -64,11 +60,37 @@ class Experiment():
                  cv_suffix: str = "_cv",features = None, **kwargs):
         """
         Each instance of this class is a classification experiment which stores all the configurations and the results.
-        This object is used to run the cross-validation (CV) by supplying it with X,y
+        This object is used to run the experiment procedure, using all the attributes passed or implied by its creation.
+        The only parameters necessary for the creation of an experiment are the meta-data Dataframe (properly formated)
+        and an estimator (from the default ones).
+
+        .. note::
+
+            A properly formatted meta-data dataframe has the values of the response (target) variable under the column
+            `target`, and the values of the variable used to split the dataset into train and test sets (and the
+            train into validation sets) under the column `group`. For the purposes of the paper, the meta-data dataframe
+            is the wwfdf csv found in `data/processed`. The target values can be either under the column `Water` or
+            `River_loc`.
+
+        A minimal example initialising an Experiment object is given below
+
+        example::
+
+            from sklearn.ensemble import RandomForestClassifier
+            import pandas as pd
+            # project_dir is the path to the project directory
+            wwfdf = pd.read_csv(project_dir+"data/processed/wwfdf",index_col = 0)
+            # creating the object
+            experiment_object = Experiment(meta_data = wwfdf, estimator = RandomForestClassifier,
+                                           target_column = "Water",train_test_column = "Area_group")
 
         :param meta_data: The meta-data dataframe that contains the target, train_test_group and validation_group columns.
             The default names for the columns are "target" for the target variable, and "group" for the train_test_group
             and validation_group
+        :param target_column: The column in the meta_data dataframe where the values of the target variable are found.
+            default is `target`
+        :param train_test_column: The column in the meta_data dataframe where the values of the variable used to split
+            the samples into train.and test sets are found. default is `group`
         :param train_test_split_method: StratifiedKFold or GroupKFold
         :param estimator: estimator object,
         :param grid: grid of hyperparameters

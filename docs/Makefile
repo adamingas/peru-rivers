@@ -7,13 +7,15 @@ SPHINXBUILD   = sphinx-build
 PAPER         =
 #BUILDDIR      = _build
 # Using another folder as the build directory that is outside this project. This folder will be synced with the gh-pages repository of the project
-BUILDDIR 	  = ../peru-rivers-doc-builds
+BUILDDIR 	  = ../../peru-rivers-doc-builds
 # Internal variables.
 PAPEROPT_a4     = -D latex_paper_size=a4
 PAPEROPT_letter = -D latex_paper_size=letter
 ALLSPHINXOPTS   = -d $(BUILDDIR)/doctrees $(PAPEROPT_$(PAPER)) $(SPHINXOPTS) .
 # the i18n builder cannot share the environment and doctrees with the others
 I18NSPHINXOPTS  = $(PAPEROPT_$(PAPER)) $(SPHINXOPTS) .
+
+GIT := "!(".git")"
 
 .PHONY: help clean html dirhtml singlehtml pickle json htmlhelp qthelp devhelp epub latex latexpdf text man changes linkcheck doctest gettext
 
@@ -40,7 +42,7 @@ help:
 	@echo "  doctest    to run all doctests embedded in the documentation (if enabled)"
 
 clean:
-	-rm -rf $(BUILDDIR)/*
+	-rm -vrf $(BUILDDIR)/html/$(GIT)
 
 html:
 	$(SPHINXBUILD) -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html

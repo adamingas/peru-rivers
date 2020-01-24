@@ -1,3 +1,9 @@
+"""
+.. module:: methods
+   :synopsis: Contains the class used to create the CV_models objects, and all other methods in use by the package.
+
+"""
+
 import pandas as pd
 from src.models.cssnormaliser import CSSNormaliser
 from src.models.default_grids import default_grids
@@ -43,9 +49,10 @@ classifier_to_string = {
 }
 def string_to_key(string: str):
     """
-    Processes strings to be read by dictionaries linking to methods
-    :param string:
-    :return:
+    Processes strings using regular expression so that they can be used as keys in dictionaries.
+
+    :param string: Any string
+    :return: Same string lowercased with only latin characters
     """
     try:
         # Removing all characters not in alphabet and making the string lower case
@@ -56,6 +63,13 @@ def string_to_key(string: str):
 
 
 def check_if_it_can_fit(object):
+    """
+    Checks if *object* has the attributes ```fit,predict,get_params,set_params```
+
+    :param object: Any object
+    :return: The object if it has the above attributes
+    :raises: Exception if the estimator doesn't have the atributes
+    """
     if hasattr(object, "fit") and hasattr(object, "predict") and hasattr(object, "get_params") and hasattr(object,
                                                                                                            "set_params"):
         return object
@@ -65,6 +79,23 @@ def check_if_it_can_fit(object):
 
 def select_estimator(estimator_dict):
     """
+    Takes either a string or a dictionary and searches if the packages has an implementation of that estimator.
+    If it is a string then it is used as a key in the dictionary containing the default estimators.
+    If it is a dictionary then it is required to have a "name" key with the name of the estimator to be used. This value
+    is then used in the same manner as if the user had just supplied a string. Optional keys are
+    * method: A custom classifier. Used if the "name" is not found in the default estimators.
+    * grid: A dictionary. The hyperparameter grid to search over. Each default estimator is associated with a default
+            grid. This key should be used if the user wants to use a different grid or if a custom estimator object is
+            used.
+    * cv: The method used to search over hyperparameter combinations. Choices are "grid", "random", and "bayes".
+          Default is "grid".
+    * kwargs: Any other parameters used in the instantiation of the estimator. eg the random_state of the
+              RandomForrestClassifier.
+
+    The estimators implemented are::
+        {"RandomForest": RandomForestClassifier, "LogisticRegression": LogisticRegression, "SVM": SVC,
+                 "BernoulliNB":BernoulliNB,"MultinomialNB":MultinomialNB,"ComplementNB":ComplementNB,
+                 "KNN":KNeighborsClassifier}
 
     :param estimator_dict: dict or string
         Dictionary containing name of estimator together with kwargs. A string can also be used, and the default
@@ -139,15 +170,17 @@ def indexing_columns(name, dataframe, column):
 def read_datasets(data_string):
     """
     Reads in either a dictionary or a tuple and tries to open up the datasets.
-    The dictionary has the form {"features":features_data_set,"target":target_data_set,
-    optional"target_col":column_of_target_variable default is "target", optional"train_test_group":column_of_grouping_variable
-    default is "group" if it doesn't exist it is set to target variable}
-    The tuple has the name of the features dataset as first element and the name of the target as second.
+    The dictionary has the form::
+        {"features":features_data_set,"meta":target_data_set,
+        "target_col":column_of_target_variable default is "target"(optional),
+        "train_test_group":column_of_grouping_variable
+        default is "group" if it doesn't exist it is set to target variable (optional)}
+
+    The tuple has the name of the features dataset as first element and the name of the meta_data as second.
     default columns are used for target and train_test_group
 
     :param data_string: tuple or dict
-    :return:
-    (features_name,target_name,target_col,train_test_group_col), features_set,target_set,target,group
+    :return: (features_name,target_name,target_col,train_test_group_col), features_set,target_set,target,group
     """
     if type(data_string) is dict:
         features_file = data_string["features"]
@@ -197,9 +230,15 @@ def read_datasets(data_string):
 
 def my_product(inp, just_values=True):
     """"
-    Product of values in dictionary
-    :param inp: dict
+    Takes in a dictionary and finds all possible combinations between the values of the keys.
+    As an example
+        >>>example_dict = {"a":[2,3,4],"b":[8,9]}
+        >>>my_product(example_dict)
+        [(2, 8), (2, 9), (3, 8), (3, 9), (4, 8), (4, 9)]
 
+
+    :param inp: dict
+    :param just_values: bool, default is true. If true it returns only the values without the keys
     :returns (product):
     """
     if just_values:
@@ -394,6 +433,17 @@ class BayesSearchCV:
 
 
 class CV_models():
+    """
+    The CrossValidation object that performs hyperparameter search for the supplied estimator and validation folds.
+    The implemented hyperparameter search methods are
+        * grid: Exhaustive search. All combinations of hyperparameters are tried on all validation folds. Time consuming
+        if the size of the grid is large
+        * random: hyperparameters combinations are randomly sampled and tried. The number of iterations determines the
+        speed and accuracy
+        * bayes: Using bayesian optimisiation to choose the combinations of hyperparameters to try. Performs better thab
+        random when using large grids.
+
+    """
     search_methods = {
         "_cv": GridSearchCV,
         "_rcv": RandomizedSearchCV,
@@ -403,6 +453,8 @@ class CV_models():
 
     def __init__(self, grid, estimator, parameter_search, **kwargs):
         """
+        This object is used by the Experiment object.
+
         Parameters
         -----------
         :param grid: dict
@@ -439,9 +491,9 @@ class CV_models():
         :param validation_group: 1darray or pandas series
             Group/Strata for GroupKFold/StratifiedKFold
         :returns: best_parameters, model, coefficients
-        :list: Set of best hyperparameters
-        model: fitted model on features and target
-        coefficients: Cofficients or feature importances for each feature. Can be NoneType if the estimator doesnt
+            * list: Set of best hyperparameters
+            * model: fitted model on features and target
+            * coefficients: Cofficients or feature importances for each feature. Can be NoneType if the estimator doesnt
             support it
         """
 

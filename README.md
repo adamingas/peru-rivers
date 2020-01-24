@@ -1,10 +1,10 @@
-peru-rivers
-==============================
+Readme
+======
 
 Machine Learning analysis performed on eDNA samples sourced from Norther Peruvian Rivers.
 
 Project Organization
-------------
+--------------------
 
     ├── LICENSE
     ├── Makefile           <- Makefile with commands like `make data` or `make train`
@@ -71,7 +71,7 @@ This project contains the package and set up requirements for reproducing the ma
 
 
 Using the Makefile
-==================
+------------------
 To use the Makefile the user needs the GNU make program, available for linux, macos and windows. To view all possible commands of the Makefile start a shell in the projects directory and execute the command ``make``. This will list all the available options. The programming languages used in the package are python and R, so make sure they are installed. Then run   
 ```
 make create-environment
@@ -90,7 +90,7 @@ which will open up an interactive python session preloaded with all the necessar
 The unsupervised csv file's rows are the samples of the peru rivers. The columns indicate which clustering algorithm, data set and transformation techniques were used to obtain the results. The number assigned to each sample is it's group membership in the clustering result. 
 
 Custom configuration
-==================== 
+-------------------- 
 The package can also be used to run experiments not design for the purpose of the paper. To do so, the user will need to modify files in the ```src/models/``` directory. The script that creates experiments from the configuration files and also runs them is the ```config_to_experiment.py```. Running it using ```python config_to_experiment.py``` uses the default configuration (replicating the paper's supervised results) and saves the results in the ```results/supervised/``` directory. The experiments are saved in the ```experiments/``` directory.
 
 To run custom experiments, the user has to edit the ```src/models/custom_config.py``` file or create a new one that follows its structure. Instructions on how the configuration file works can be found as comments inside the file itself.  
@@ -99,9 +99,9 @@ The purpose of the configuration file is the mass creation of experiments which 
 To use the custom configuration file use the ```--config``` argument when running the script, and pass it the name of the configuration file. If the current directory is src/models/ and the chosen configuration file is custom_config.py then run:   
  ```python config_to_experiment.py --config custom_config```
 
- To append a custom string at the start of the results filename use the ```--name``` argument and pass the desired string after it. 
- Running  
+To append a custom string at the start of the results filename use the ```--name``` argument and pass the desired string after it. 
 ```python config_to_experiment.py --config custom_config --name 1000rivers```  
+Running  
 will produce a results file with the name "1000riversresults<date-time\>" 
 
 
