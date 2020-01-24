@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>peru-rivers &#8212; peru-rivers 0.1 documentation</title>
+    <title>Readme &#8212; peru-rivers 0.1 documentation</title>
     <link rel="stylesheet" href="_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     
@@ -43,8 +43,8 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="peru-rivers">
-<h1>peru-rivers<a class="headerlink" href="#peru-rivers" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="readme">
+<h1>Readme<a class="headerlink" href="#readme" title="Permalink to this headline">¶</a></h1>
 <p>Machine Learning analysis performed on eDNA samples sourced from Norther Peruvian Rivers.</p>
 <div class="section" id="project-organization">
 <h2>Project Organization<a class="headerlink" href="#project-organization" title="Permalink to this headline">¶</a></h2>
@@ -111,9 +111,8 @@
 </div></blockquote>
 <p>This project contains the package and set up requirements for reproducing the machine learning results of the NatureMetrics peru paper. The Makefile should be enough for reproducing the results. To create custom experiments and run them the <code class="docutils literal notranslate"><span class="pre">config.py</span></code> and <code class="docutils literal notranslate"><span class="pre">config-to-experiment.py</span></code> files should be used.</p>
 </div>
-</div>
 <div class="section" id="using-the-makefile">
-<h1>Using the Makefile<a class="headerlink" href="#using-the-makefile" title="Permalink to this headline">¶</a></h1>
+<h2>Using the Makefile<a class="headerlink" href="#using-the-makefile" title="Permalink to this headline">¶</a></h2>
 <p>To use the Makefile the user needs the GNU make program, available for linux, macos and windows. To view all possible commands of the Makefile start a shell in the projects directory and execute the command <code class="docutils literal notranslate"><span class="pre">make</span></code>. This will list all the available options. The programming languages used in the package are python and R, so make sure they are installed. Then run
 <code class="docutils literal notranslate"><span class="pre">`</span>
 <span class="pre">make</span> <span class="pre">create-environment</span>
@@ -131,20 +130,21 @@ which will open up an interactive python session preloaded with all the necessar
 The unsupervised csv file’s rows are the samples of the peru rivers. The columns indicate which clustering algorithm, data set and transformation techniques were used to obtain the results. The number assigned to each sample is it’s group membership in the clustering result.</p>
 </div>
 <div class="section" id="custom-configuration">
-<h1>Custom configuration<a class="headerlink" href="#custom-configuration" title="Permalink to this headline">¶</a></h1>
+<h2>Custom configuration<a class="headerlink" href="#custom-configuration" title="Permalink to this headline">¶</a></h2>
 <p>The package can also be used to run experiments not design for the purpose of the paper. To do so, the user will need to modify files in the <code class="docutils literal notranslate"><span class="pre">`src/models/`</span></code> directory. The script that creates experiments from the configuration files and also runs them is the <code class="docutils literal notranslate"><span class="pre">`config_to_experiment.py`</span></code>. Running it using <code class="docutils literal notranslate"><span class="pre">`python</span> <span class="pre">config_to_experiment.py`</span></code> uses the default configuration (replicating the paper’s supervised results) and saves the results in the <code class="docutils literal notranslate"><span class="pre">`results/supervised/`</span></code> directory. The experiments are saved in the <code class="docutils literal notranslate"><span class="pre">`experiments/`</span></code> directory.</p>
 <p>To run custom experiments, the user has to edit the <code class="docutils literal notranslate"><span class="pre">`src/models/custom_config.py`</span></code> file or create a new one that follows its structure. Instructions on how the configuration file works can be found as comments inside the file itself.
 The purpose of the configuration file is the mass creation of experiments which have some attributes common between them (let’s say the use of CSS normalisation and the datasets) but differ in another (which classifier is to be used). All possible combinations of settings are put in a dictionary and the product of all possible choices is used as attributes to create experiments.</p>
-<dl>
+<dl class="simple">
 <dt>To use the custom configuration file use the <code class="docutils literal notranslate"><span class="pre">`--config`</span></code> argument when running the script, and pass it the name of the configuration file. If the current directory is src/models/ and the chosen configuration file is custom_config.py then run:</dt><dd><p><code class="docutils literal notranslate"><span class="pre">`python</span> <span class="pre">config_to_experiment.py</span> <span class="pre">--config</span> <span class="pre">custom_config`</span></code></p>
-<p>To append a custom string at the start of the results filename use the <code class="docutils literal notranslate"><span class="pre">`--name`</span></code> argument and pass the desired string after it.
-Running</p>
 </dd>
 </dl>
-<p><code class="docutils literal notranslate"><span class="pre">`python</span> <span class="pre">config_to_experiment.py</span> <span class="pre">--config</span> <span class="pre">custom_config</span> <span class="pre">--name</span> <span class="pre">1000rivers`</span></code>
+<p>To append a custom string at the start of the results filename use the <code class="docutils literal notranslate"><span class="pre">`--name`</span></code> argument and pass the desired string after it.
+<code class="docutils literal notranslate"><span class="pre">`python</span> <span class="pre">config_to_experiment.py</span> <span class="pre">--config</span> <span class="pre">custom_config</span> <span class="pre">--name</span> <span class="pre">1000rivers`</span></code>
+Running
 will produce a results file with the name “1000riversresults&lt;date-time&gt;”</p>
 <hr class="docutils" />
 <p>&lt;p&gt;&lt;small&gt;Project based on the &lt;a target=”_blank” href=”<a class="reference external" href="https://drivendata.github.io/cookiecutter-data-science/">https://drivendata.github.io/cookiecutter-data-science/</a>”&gt;cookiecutter data science project template&lt;/a&gt;. #cookiecutterdatascience&lt;/small&gt;&lt;/p&gt;</p>
+</div>
 </div>
 
 
@@ -155,12 +155,12 @@ will produce a results file with the name “1000riversresults&lt;date-time&gt;�
         <div class="sphinxsidebarwrapper">
   <h3><a href="index.html">Table of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">peru-rivers</a><ul>
+<li><a class="reference internal" href="#">Readme</a><ul>
 <li><a class="reference internal" href="#project-organization">Project Organization</a></li>
-</ul>
-</li>
 <li><a class="reference internal" href="#using-the-makefile">Using the Makefile</a></li>
 <li><a class="reference internal" href="#custom-configuration">Custom configuration</a></li>
+</ul>
+</li>
 </ul>
 
   <h4>Previous topic</h4>

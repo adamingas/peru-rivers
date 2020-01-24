@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>Commands &#8212; peru-rivers 0.1 documentation</title>
+    <title>Makefile Commands &#8212; peru-rivers 0.1 documentation</title>
     <link rel="stylesheet" href="_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     
@@ -43,14 +43,25 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="commands">
-<h1>Commands<a class="headerlink" href="#commands" title="Permalink to this headline">¶</a></h1>
-<p>The Makefile contains the central entry points for common tasks related to this project.</p>
-<div class="section" id="syncing-data-to-s3">
-<h2>Syncing data to S3<a class="headerlink" href="#syncing-data-to-s3" title="Permalink to this headline">¶</a></h2>
+  <div class="section" id="makefile-commands">
+<h1>Makefile Commands<a class="headerlink" href="#makefile-commands" title="Permalink to this headline">¶</a></h1>
+<p>The Makefile contains the central entry points for common tasks related to this project.
+It is recommended for users to run all the commands in the <a class="reference internal" href="#setting-up-environment">Setting up Environment</a> section even if they choose not to replicate the results of the paper. This is to ensure that all necessary libraries required for the proper functioning of the package are installed.</p>
+<div class="section" id="setting-up-environment">
+<h2>Setting up Environment<a class="headerlink" href="#setting-up-environment" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li><p><cite>make sync_data_to_s3</cite> will use <cite>aws s3 sync</cite> to recursively sync files in <cite>data/</cite> up to <cite>s3://[OPTIONAL] your-bucket-for-syncing-data (do not include ‘s3://’)/data/</cite>.</p></li>
-<li><p><cite>make sync_data_from_s3</cite> will use <cite>aws s3 sync</cite> to recursively sync files from <cite>s3://[OPTIONAL] your-bucket-for-syncing-data (do not include ‘s3://’)/data/</cite> to <cite>data/</cite>.</p></li>
+<li><p><strong>`make test-environment`</strong> runs <cite>test-environment.py</cite> which tests whether python 3 is installed.</p></li>
+<li><p><strong>`make create_environment`</strong> creates a python interpreter environment with either conda or virtualenv.</p></li>
+<li><p><strong>`make requirements`</strong> runs <strong>`make test-environment`</strong>. Then installs all python and R requirements.</p></li>
+<li><p><strong>`make data`</strong> Converts raw data into usable otu-matrices and properly formatted metadata.</p></li>
+</ul>
+</div>
+<div class="section" id="replicating-paper">
+<h2>Replicating paper<a class="headerlink" href="#replicating-paper" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p><strong>`make supervised`</strong> runs <strong>`make data`</strong> and <strong>`make requirements`</strong>. Then replicates supervised results of paper. Results are stored in <cite>results/supervised/</cite> as a pickled dataframe and in <cite>experiments/</cite> as pickled experiment objects.</p></li>
+<li><p><strong>`make unsupervised`</strong> runs <strong>`make data`</strong> and <strong>`make requirements`</strong>. Then replicates unsupervised results of paper. Results are stored in <cite>results/unsupervised/</cite> in a .csv file.</p></li>
+<li><p><strong>`make replicate`</strong> runs <strong>`make unsupervised`</strong> and then <strong>`make supervised`</strong>.</p></li>
 </ul>
 </div>
 </div>
@@ -63,8 +74,9 @@
         <div class="sphinxsidebarwrapper">
   <h3><a href="index.html">Table of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">Commands</a><ul>
-<li><a class="reference internal" href="#syncing-data-to-s3">Syncing data to S3</a></li>
+<li><a class="reference internal" href="#">Makefile Commands</a><ul>
+<li><a class="reference internal" href="#setting-up-environment">Setting up Environment</a></li>
+<li><a class="reference internal" href="#replicating-paper">Replicating paper</a></li>
 </ul>
 </li>
 </ul>

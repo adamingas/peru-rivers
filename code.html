@@ -16,7 +16,7 @@
     
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="prev" title="Commands" href="commands.html" /> 
+    <link rel="prev" title="Makefile Commands" href="commands.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
@@ -28,7 +28,7 @@
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="commands.html" title="Commands"
+          <a href="commands.html" title="Makefile Commands"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="index.html">peru-rivers 0.1 documentation</a> &#187;</li> 
       </ul>
@@ -41,10 +41,6 @@
             
   <div class="section" id="code-documentation">
 <h1>Code Documentation<a class="headerlink" href="#code-documentation" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="module-src.models">
-<span id="init-file"></span><h2>Init file<a class="headerlink" href="#module-src.models" title="Permalink to this headline">¶</a></h2>
-<p>Package for experiment creation and running.</p>
-</div>
 <div class="section" id="module-src.models.experiment">
 <span id="experiment"></span><h2>Experiment<a class="headerlink" href="#module-src.models.experiment" title="Permalink to this headline">¶</a></h2>
 <span class="target" id="module-experiment"></span><dl class="class">
@@ -55,13 +51,38 @@
 <dt id="src.models.experiment.Experiment.__init__">
 <code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">meta_data: pandas.core.frame.DataFrame</em>, <em class="sig-param">estimator</em>, <em class="sig-param">grid: dict = None</em>, <em class="sig-param">estimator_name=None</em>, <em class="sig-param">train_test_column='group'</em>, <em class="sig-param">target_column='target'</em>, <em class="sig-param">names=(None</em>, <em class="sig-param">None)</em>, <em class="sig-param">train_test_split_method=StratifiedKFold(n_splits=7</em>, <em class="sig-param">random_state=None</em>, <em class="sig-param">shuffle=False)</em>, <em class="sig-param">css_normalisation=CSSNormaliser(log = False</em>, <em class="sig-param">identity = True)</em>, <em class="sig-param">validation_method_group: tuple = (None</em>, <em class="sig-param">None)</em>, <em class="sig-param">scaler=FunctionTransformer(accept_sparse=False</em>, <em class="sig-param">check_inverse=True</em>, <em class="sig-param">func=None</em>, <em class="sig-param">inv_kw_args=None</em>, <em class="sig-param">inverse_func=None</em>, <em class="sig-param">kw_args=None</em>, <em class="sig-param">pass_y='deprecated'</em>, <em class="sig-param">validate=False)</em>, <em class="sig-param">resampler=FunctionSampler(accept_sparse=True</em>, <em class="sig-param">func=None</em>, <em class="sig-param">kw_args=None)</em>, <em class="sig-param">cv_suffix: str = '_cv'</em>, <em class="sig-param">features=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#src.models.experiment.Experiment.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Each instance of this class is a classification experiment which stores all the configurations and the results.
-This object is used to run the cross-validation (CV) by supplying it with X,y</p>
+This object is used to run the experiment procedure, using all the attributes passed or implied by its creation.
+The only parameters necessary for the creation of an experiment are the meta-data Dataframe (properly formated)
+and an estimator (from the default ones).</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>A properly formatted meta-data dataframe has the values of the response (target) variable under the column
+<cite>target</cite>, and the values of the variable used to split the dataset into train and test sets (and the
+train into validation sets) under the column <cite>group</cite>. For the purposes of the paper, the meta-data dataframe
+is the wwfdf csv found in <cite>data/processed</cite>. The target values can be either under the column <cite>Water</cite> or
+<cite>River_loc</cite>.</p>
+</div>
+<p>A minimal example initialising an Experiment object is given below</p>
+<p>example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="k">import</span> <span class="n">RandomForestClassifier</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="c1"># project_dir is the path to the project directory</span>
+<span class="n">wwfdf</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">project_dir</span><span class="o">+</span><span class="s2">&quot;data/processed/wwfdf&quot;</span><span class="p">,</span><span class="n">index_col</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span>
+<span class="c1"># creating the object</span>
+<span class="n">experiment_object</span> <span class="o">=</span> <span class="n">Experiment</span><span class="p">(</span><span class="n">meta_data</span> <span class="o">=</span> <span class="n">wwfdf</span><span class="p">,</span> <span class="n">estimator</span> <span class="o">=</span> <span class="n">RandomForestClassifier</span><span class="p">,</span>
+                               <span class="n">target_column</span> <span class="o">=</span> <span class="s2">&quot;Water&quot;</span><span class="p">,</span><span class="n">train_test_column</span> <span class="o">=</span> <span class="s2">&quot;Area_group&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>meta_data</strong> – The meta-data dataframe that contains the target, train_test_group and validation_group columns.
 The default names for the columns are “target” for the target variable, and “group” for the train_test_group
 and validation_group</p></li>
+<li><p><strong>target_column</strong> – The column in the meta_data dataframe where the values of the target variable are found.
+default is <cite>target</cite></p></li>
+<li><p><strong>train_test_column</strong> – The column in the meta_data dataframe where the values of the variable used to split
+the samples into train.and test sets are found. default is <cite>group</cite></p></li>
 <li><p><strong>train_test_split_method</strong> – StratifiedKFold or GroupKFold</p></li>
 <li><p><strong>estimator</strong> – estimator object,</p></li>
 <li><p><strong>grid</strong> – grid of hyperparameters</p></li>
@@ -152,8 +173,97 @@ pickle format in order to conserve space.</p></li>
 </dd></dl>
 
 </div>
-<div class="section" id="auto-method">
-<h2>Auto-Method<a class="headerlink" href="#auto-method" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="cv-models-class">
+<h2>CV_models class<a class="headerlink" href="#cv-models-class" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="src.models.methods.CV_models">
+<em class="property">class </em><code class="sig-prename descclassname">src.models.methods.</code><code class="sig-name descname">CV_models</code><span class="sig-paren">(</span><em class="sig-param">grid</em>, <em class="sig-param">estimator</em>, <em class="sig-param">parameter_search</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#src.models.methods.CV_models" title="Permalink to this definition">¶</a></dt>
+<dd><p>The CrossValidation object that performs hyperparameter search for the supplied estimator and validation folds.
+The implemented hyperparameter search methods are</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>grid: Exhaustive search. All combinations of hyperparameters are tried on all validation folds. Time consuming</p></li>
+</ul>
+<p>if the size of the grid is large
+* random: hyperparameters combinations are randomly sampled and tried. The number of iterations determines the
+speed and accuracy
+* bayes: Using bayesian optimisiation to choose the combinations of hyperparameters to try. Performs better thab
+random when using large grids.</p>
+</div></blockquote>
+<dl class="method">
+<dt id="src.models.methods.CV_models.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">grid</em>, <em class="sig-param">estimator</em>, <em class="sig-param">parameter_search</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#src.models.methods.CV_models.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>This object is used by the Experiment object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>grid</strong> – dict
+Grid of parameter space to search for the best set of hyperparameters</p></li>
+<li><p><strong>estimator</strong> – sklearn estimator</p></li>
+<li><p><strong>parameter_search</strong> – str
+The method used to search over parameter space. Options are “grid”, “random” and “bayes”
+Default is Grid, but Randomized and bayesian will be developed as well.</p></li>
+<li><p><strong>validation_kfold_method</strong> – sklearn.model_selection KFold method
+StratifiedKFold or GroupKFold methods</p></li>
+<li><p><strong>validation_group</strong> – </p></li>
+<li><p><strong>number_of_kfolds</strong> – int
+Number of times to split the data</p></li>
+<li><p><strong>kwargs</strong> – optional kwargs</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="src.models.methods.CV_models.fit">
+<code class="sig-name descname">fit</code><span class="sig-paren">(</span><em class="sig-param">features</em>, <em class="sig-param">target</em>, <em class="sig-param">ksets=None</em><span class="sig-paren">)</span><a class="headerlink" href="#src.models.methods.CV_models.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fit the estimator to features and targets, using Cross validation. The Cross validation procedure uses the
+validation_group as the groupping/strata.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ksets</strong> – <ul>
+<li><p>None, to use the default 3-fold cross validation,</p></li>
+<li><p>integer, to specify the number of folds in a (Stratified)KFold,</p></li>
+<li><p>CV splitter,</p></li>
+<li><p>An iterable yielding (train, test) splits as arrays of indices.</p></li>
+</ul>
+</p></li>
+<li><p><strong>features</strong> – ndarray or pandas dataframe
+Features set, or X</p></li>
+<li><p><strong>target</strong> – 1darray or pandas series
+The class of each sample, or y</p></li>
+<li><p><strong>validation_group</strong> – 1darray or pandas series
+Group/Strata for GroupKFold/StratifiedKFold</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>best_parameters, model, coefficients
+* list: Set of best hyperparameters
+* model: fitted model on features and target
+* coefficients: Cofficients or feature importances for each feature. Can be NoneType if the estimator doesnt
+support it</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="src.models.methods.CV_models.predict">
+<code class="sig-name descname">predict</code><span class="sig-paren">(</span><em class="sig-param">features</em><span class="sig-paren">)</span><a class="headerlink" href="#src.models.methods.CV_models.predict" title="Permalink to this definition">¶</a></dt>
+<dd><p>The trained model is used to predict the class of features</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>features</strong> – array-like
+has to have the same number of features as train-features set</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>predictions</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </div>
 </div>
 
@@ -166,16 +276,15 @@ pickle format in order to conserve space.</p></li>
   <h3><a href="index.html">Table of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">Code Documentation</a><ul>
-<li><a class="reference internal" href="#module-src.models">Init file</a></li>
 <li><a class="reference internal" href="#module-src.models.experiment">Experiment</a></li>
-<li><a class="reference internal" href="#auto-method">Auto-Method</a></li>
+<li><a class="reference internal" href="#cv-models-class">CV_models class</a></li>
 </ul>
 </li>
 </ul>
 
   <h4>Previous topic</h4>
   <p class="topless"><a href="commands.html"
-                        title="previous chapter">Commands</a></p>
+                        title="previous chapter">Makefile Commands</a></p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -207,7 +316,7 @@ pickle format in order to conserve space.</p></li>
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="commands.html" title="Commands"
+          <a href="commands.html" title="Makefile Commands"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="index.html">peru-rivers 0.1 documentation</a> &#187;</li> 
       </ul>
