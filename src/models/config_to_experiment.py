@@ -50,7 +50,7 @@ except AttributeError as e:
           "variable is used.")
     raise e
 # Storing the date and time to be used for saving the results and avoiding overwritting
-day_time_string = time.strftime("%m%d-%H:%M")
+day_time_string = time.strftime("%Y-%m-%d-%H%M")
 warnings.filterwarnings("ignore", category=UserWarning)
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 warnings.filterwarnings("ignore", category=FutureWarning)

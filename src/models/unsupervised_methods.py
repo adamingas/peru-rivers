@@ -31,7 +31,7 @@ riverdfCssLog = CSSNormaliser(log=True).fit_transform(riverdf)
 fulldf = pd.read_csv(path+ "/fulldf",index_col=0)
 fulldfCssLog = CSSNormaliser(log=True).fit_transform(fulldf)
 
-day_time_string = time.strftime("%m%d-%H:%M")
+day_time_string = time.strftime("%Y-%m-%d")
 
 def edge_colors():
     edgecolors = np.array([[1,0,0]]*164,dtype = float)

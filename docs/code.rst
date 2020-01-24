@@ -22,3 +22,9 @@ Methods
 .. automodule:: src.models.methods
    :members: CV_models 
    :special-members: __init__   
+
+
+Default configuration
+=====================
+.. automodule:: src.models.default_config
+   :members:
