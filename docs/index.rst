@@ -12,8 +12,6 @@ Contents:
    :maxdepth: 2
 
    includeme
-   purpose-of-project.md
-   getting-started
    commands
    code
 

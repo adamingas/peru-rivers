@@ -249,9 +249,10 @@ def my_product(inp, just_values=True):
 
 def catch_key_errors(function, handle=lambda x: x, *args, **kwargs):
     """
-    A shortcut for try: except KeyError to clean up code.
-    :param function:
-    :param handle:
+    A shortcut for try: except KeyError: to clean up code.
+
+    :param function: Try running funtion with arguments args and kwargs. Should be lambda function
+    :param handle: If KeyError then return handle
     :return:
     """
     try:
@@ -266,8 +267,7 @@ def catch(object, handle, method_dict, **kwargs):
     :param object: Any class whose method we wish to extract
     :param handle: If the specific method is not found in object, this method is returned
     :param method_dict: A dictionary of options for the method. It has to have the name of the method in the key "name"
-    :return:
-    method from method_dict["name"] or handle() if that is not present
+    :return: method from method_dict["name"] or handle() if that is not present
     """
     if type(method_dict) is dict:
         try:
@@ -298,7 +298,8 @@ def catch(object, handle, method_dict, **kwargs):
 
 def checking_columns(dataframe, column, function=lambda x: x, handle=lambda x: x, *args, **kwargs):
     """
-    Checks to see if dataframe has a column and returns a dunction
+    Checks to see if dataframe has a column and returns a function
+
     :param dataframe:
     :param column:
     :param function:
@@ -342,16 +343,13 @@ class BayesSearchCV:
         :param estimator: estimator object.
         A object of that type is instantiated for each grid point.
         This is assumed to implement the scikit-learn estimator interface.
-
         :param grid: dict
         Dictionary with parameters names (string) as keys and distributions
         of parameters to try. Distributions must provide a `'hp'`
         distribution ( from hyperopt.hp).
-
         :param cv:int, cross-validation generator or an iterable, optional
         Determines the cross-validation splitting strategy.
         Possible inputs for cv are:
-
         - None, to use the default 3-fold cross validation,
         - integer, to specify the number of folds in a `(Stratified)KFold`,
         - :term:`CV splitter`,
@@ -360,24 +358,20 @@ class BayesSearchCV:
         For integer/None inputs, if the estimator is a classifier and ``y`` is
         either binary or multiclass, :class:`StratifiedKFold` is used. In all
         other cases, :class:`KFold` is used.
-
         :param scoring:string, callable, list/tuple, dict or None, default: None
         A single string (see :ref:`scoring_parameter`) or a callable
         (see :ref:`scoring`) to evaluate the predictions on the test set.
-
         :param verbose: int
         Controls the verbosity: the higher, the more messages.
-
         :param n_jobs:n_jobs : int or None, optional (default=None)
         Number of jobs to run in parallel.
         ``None`` means 1 unless in a :obj:`joblib.parallel_backend` context.
         ``-1`` means using all processors.
-
         :param n_iter:int, default=100
         Number of parameter settings that are sampled. n_iter trades
         off runtime vs quality of the solution.
-
         :param kwargs:
+
         """
 
         self.verbose = verbose
@@ -437,11 +431,12 @@ class CV_models():
     The CrossValidation object that performs hyperparameter search for the supplied estimator and validation folds.
     The implemented hyperparameter search methods are
         * grid: Exhaustive search. All combinations of hyperparameters are tried on all validation folds. Time consuming
-        if the size of the grid is large
+          if the size of the grid is large
         * random: hyperparameters combinations are randomly sampled and tried. The number of iterations determines the
-        speed and accuracy
+          speed and accuracy
         * bayes: Using bayesian optimisiation to choose the combinations of hyperparameters to try. Performs better thab
-        random when using large grids.
+          random when using large grids.
+
 
     """
     search_methods = {
@@ -455,8 +450,6 @@ class CV_models():
         """
         This object is used by the Experiment object.
 
-        Parameters
-        -----------
         :param grid: dict
             Grid of parameter space to search for the best set of hyperparameters
         :param estimator: sklearn estimator
@@ -484,6 +477,7 @@ class CV_models():
                       * integer, to specify the number of folds in a (Stratified)KFold,
                       * CV splitter,
                       * An iterable yielding (train, test) splits as arrays of indices.
+
         :param features: ndarray or pandas dataframe
             Features set, or X
         :param target: 1darray or pandas series
@@ -491,10 +485,12 @@ class CV_models():
         :param validation_group: 1darray or pandas series
             Group/Strata for GroupKFold/StratifiedKFold
         :returns: best_parameters, model, coefficients
-            * list: Set of best hyperparameters
-            * model: fitted model on features and target
-            * coefficients: Cofficients or feature importances for each feature. Can be NoneType if the estimator doesnt
-            support it
+
+                * list: Set of best hyperparameters
+                * model: fitted model on features and target
+                * coefficients: Cofficients or feature importances for each feature. Can be NoneType if the estimator doesnt
+                  support it
+
         """
 
         # Choosing the search method from Grid, Random and Bayes

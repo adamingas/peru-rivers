@@ -20,12 +20,12 @@ import pickle
 parser = argparse.ArgumentParser(description='The script that converts the configuration file (dictionaries) into '
                                              'experiments and runs them. Any arguments passed through the command line'
                                              ' are for custom runs.')
-parser.add_argument('--config', metavar='config-file', type=str, nargs=1,default = "default_config",
+parser.add_argument('--config', metavar='config-file', type=str, nargs=1,default = ["default_config"],
                     help='Name of custom config file without .py extension, eg custom_config'
                          ' If not provided then the dafault_config.py is used as the '
                          'configuration. The custom configuration file has to be in the same folder as the '
                          'config_to_experiment.py file.',required =False)
-parser.add_argument('--name', metavar='name', type=str, nargs=1,default = "",
+parser.add_argument('--name', metavar='name', type=str, nargs=1,default = [""],
                     help='A string to be appended at the start of the filename of the results file produced'
                          ,required =False)
 

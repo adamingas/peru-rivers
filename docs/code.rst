@@ -1,6 +1,6 @@
 Code Documentation
 ******************
-This page hosts the documentation of the various classes in use by the package. 
+This page hosts the documentation of the various modules in use by the package. 
 
 Experiment
 ==========
@@ -20,5 +20,5 @@ Experiment
 Methods
 =======
 .. automodule:: src.models.methods
-   :members:  
+   :members: CV_models 
    :special-members: __init__   
