@@ -11,9 +11,8 @@ Contents:
 .. toctree::
    :maxdepth: 2
 
+   README
    includeme
-   purpose-of-project.md
-   getting-started
    commands
    code
 

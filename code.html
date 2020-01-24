@@ -41,6 +41,7 @@
             
   <div class="section" id="code-documentation">
 <h1>Code Documentation<a class="headerlink" href="#code-documentation" title="Permalink to this headline">¶</a></h1>
+<p>This page hosts the documentation of the various modules in use by the package.</p>
 <div class="section" id="module-src.models.experiment">
 <span id="experiment"></span><h2>Experiment<a class="headerlink" href="#module-src.models.experiment" title="Permalink to this headline">¶</a></h2>
 <span class="target" id="module-experiment"></span><dl class="class">
@@ -173,22 +174,22 @@ pickle format in order to conserve space.</p></li>
 </dd></dl>
 
 </div>
-<div class="section" id="cv-models-class">
-<h2>CV_models class<a class="headerlink" href="#cv-models-class" title="Permalink to this headline">¶</a></h2>
-<dl class="class">
+<div class="section" id="module-src.models.methods">
+<span id="methods"></span><h2>Methods<a class="headerlink" href="#module-src.models.methods" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-methods"></span><dl class="class">
 <dt id="src.models.methods.CV_models">
 <em class="property">class </em><code class="sig-prename descclassname">src.models.methods.</code><code class="sig-name descname">CV_models</code><span class="sig-paren">(</span><em class="sig-param">grid</em>, <em class="sig-param">estimator</em>, <em class="sig-param">parameter_search</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#src.models.methods.CV_models" title="Permalink to this definition">¶</a></dt>
 <dd><p>The CrossValidation object that performs hyperparameter search for the supplied estimator and validation folds.
 The implemented hyperparameter search methods are</p>
 <blockquote>
 <div><ul class="simple">
-<li><p>grid: Exhaustive search. All combinations of hyperparameters are tried on all validation folds. Time consuming</p></li>
+<li><p>grid: Exhaustive search. All combinations of hyperparameters are tried on all validation folds. Time consuming
+if the size of the grid is large</p></li>
+<li><p>random: hyperparameters combinations are randomly sampled and tried. The number of iterations determines the
+speed and accuracy</p></li>
+<li><p>bayes: Using bayesian optimisiation to choose the combinations of hyperparameters to try. Performs better thab
+random when using large grids.</p></li>
 </ul>
-<p>if the size of the grid is large
-* random: hyperparameters combinations are randomly sampled and tried. The number of iterations determines the
-speed and accuracy
-* bayes: Using bayesian optimisiation to choose the combinations of hyperparameters to try. Performs better thab
-random when using large grids.</p>
 </div></blockquote>
 <dl class="method">
 <dt id="src.models.methods.CV_models.__init__">
@@ -238,11 +239,14 @@ Group/Strata for GroupKFold/StratifiedKFold</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>best_parameters, model, coefficients
-* list: Set of best hyperparameters
-* model: fitted model on features and target
-* coefficients: Cofficients or feature importances for each feature. Can be NoneType if the estimator doesnt
-support it</p>
+<dd class="field-even"><p><p>best_parameters, model, coefficients</p>
+<ul class="simple">
+<li><p>list: Set of best hyperparameters</p></li>
+<li><p>model: fitted model on features and target</p></li>
+<li><p>coefficients: Cofficients or feature importances for each feature. Can be NoneType if the estimator doesnt
+support it</p></li>
+</ul>
+</p>
 </dd>
 </dl>
 </dd></dl>
@@ -277,7 +281,7 @@ has to have the same number of features as train-features set</p>
   <ul>
 <li><a class="reference internal" href="#">Code Documentation</a><ul>
 <li><a class="reference internal" href="#module-src.models.experiment">Experiment</a></li>
-<li><a class="reference internal" href="#cv-models-class">CV_models class</a></li>
+<li><a class="reference internal" href="#module-src.models.methods">Methods</a></li>
 </ul>
 </li>
 </ul>
