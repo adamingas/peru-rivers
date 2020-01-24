@@ -1,6 +1,8 @@
 """
-This file is meant to reproduce the unsupervised results, thus it is not extensible and only works
-for the particular datasets we used. The methods, however, are very flexible and can be used on a variety of datasets.
+.. module:: unsupervised
+   :synopsis: This file is meant to reproduce the unsupervised results, thus it is not extensible and only works
+              for the particular datasets we used. The methods, however, are very flexible and can be used on a variety
+              of datasets.
 """
 import os
 import time

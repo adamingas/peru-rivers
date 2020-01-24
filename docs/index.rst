@@ -14,6 +14,7 @@ Contents:
    includeme
    commands
    code
+   explanation
 
 
 Indices and tables

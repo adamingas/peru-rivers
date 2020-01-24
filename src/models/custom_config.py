@@ -65,7 +65,7 @@ water_dissimilarity_dictionary = { # [M] Mandatory, [O] Optional
               # and transformation techniques and how to split the training set so as to perform cross validation
         [
         {
-            "estimators":[ {"name":"MultinomialNB"},{"name": "RandomForest"}],
+            "estimators":[ {"name":"MultinomialNB"}],
             # estimators: A list of strings/dictionaries specifiying what estimators to use and with what arguments (with
             #             the dictionary).
             #     name: The name of the estimator used. The default estimators are {"RandomForest","LogisticRegression"
@@ -114,14 +114,6 @@ water_dissimilarity_dictionary = { # [M] Mandatory, [O] Optional
             #     n_splits: Number of folds to create, default 3
             #     group_col: The column in the meta_data to use for splitting the folds
 
-        },
-        {
-            "estimators": [{"name":"SVM","kernel":"poly","degree":1}],
-            "css": ["CSSLOG", "CSS", None],
-
-            "scaler": [{"name":"StandardScaler","with_mean":False}],
-            "resampler":[None],
-            "validation":[{"name":"GroupKFold","group_col":"Area_group","n_splits":6}]
         }
     ]
 }

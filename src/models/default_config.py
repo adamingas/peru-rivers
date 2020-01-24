@@ -290,7 +290,7 @@ river_size = { # [M] Mandatory, [O] Optional
 """
 The program will loop through all dictionaries in the configuration_list and execute them
 """
-configuration_list = [water_dissimilarity_dictionary, water_similarity_dictionary, river_size, river_loc]
+configuration_list = [water_dissimilarity_dictionary, water_similarity_dictionary, river_loc]
 
 
 
