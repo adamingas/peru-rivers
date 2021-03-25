@@ -65,7 +65,7 @@ PyQtWebEngine==5.12.1
 python-dateutil==2.8.1
 python-dotenv==0.10.3
 pytz==2019.3
-PyYAML==5.1.2
+PyYAML==5.4
 pyzmq==18.1.1
 requests==2.22.0
 rpy2==3.1.0
