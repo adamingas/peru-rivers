@@ -35,7 +35,7 @@ joblib==0.14.0
 jupyter-client==5.3.4
 jupyter-core==4.6.1
 kiwisolver==1.1.0
-Mako==1.1.0
+Mako==1.2.2
 MarkupSafe==1.1.1
 matplotlib==3.1.2
 mccabe==0.6.1
