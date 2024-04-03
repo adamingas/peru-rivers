@@ -17,7 +17,7 @@ decorator==4.4.1
 docutils==0.15.2
 entrypoints==0.3
 flake8==3.7.9
-future==0.18.2
+future==0.18.3
 h5py==2.10.0
 hdbscan==0.8.23
 hyperopt==0.2.2
