@@ -57,7 +57,7 @@ pycparser==2.19
 pyflakes==2.1.1
 Pygments==2.4.2
 pymc3==3.7
-pymongo==3.9.0
+pymongo==4.6.3
 pyparsing==2.4.5
 PyQt5==5.12.3
 PyQt5-sip==4.19.18
