@@ -21,7 +21,7 @@ future==0.18.2
 h5py==2.10.0
 hdbscan==0.8.23
 hyperopt==0.2.2
-idna==2.8
+idna==3.7
 imagesize==1.1.0
 imbalanced-learn==0.5.0
 imblearn==0.0
