@@ -67,7 +67,7 @@ python-dotenv==0.10.3
 pytz==2019.3
 PyYAML==5.4
 pyzmq==18.1.1
-requests==2.22.0
+requests==2.32.0
 rpy2==3.1.0
 rsa==4.7
 s3transfer==0.2.1
